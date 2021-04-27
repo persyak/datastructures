@@ -1,5 +1,5 @@
 # Project exclude paths
+/target/
 /out/
 /.idea/
-# Project exclude paths
-/target/
+.gitignore
