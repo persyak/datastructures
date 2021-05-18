@@ -121,7 +121,7 @@ public class ArrayListTest {
         assertEquals(2, listWithFiveElements.lastIndexOf('C'));
     }
 
-    @Test
+    @Test(expected=IndexOutOfBoundsException.class)
     public void testSetValueGreaterThenSize() {
         listWithZeroElements.set("A", 2);
     }

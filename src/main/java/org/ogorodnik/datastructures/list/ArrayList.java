@@ -101,27 +101,15 @@ public class ArrayList implements List{
     }
 
     private void validateIndex(int index){
-        try {
             if (index < 0 || index >= size){
                 throw new IndexOutOfBoundsException();
             }
-        }
-        catch (IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
     }
 
     private void validateIndexForAdd(int index){
-        try {
             if (index < 0 || index > size) {
                 throw new IndexOutOfBoundsException();
             }
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger than size or less than ZERO");
-        }
     }
 
     int getLength(){

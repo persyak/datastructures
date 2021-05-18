@@ -188,26 +188,14 @@ public class LinkedList implements List{
     }
 
     private void validateIndex(int index){
-        try {
             if (index < 0 || index >= size){
-                throw new NullPointerException();
+                throw new IndexOutOfBoundsException();
             }
-        }
-        catch (NullPointerException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
     }
 
     private void validateIndexForAdd(int index){
-        try {
             if (index < 0 || index > size) {
                 throw new IndexOutOfBoundsException();
-            }
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger than size or less than ZERO");
         }
     }
 }
