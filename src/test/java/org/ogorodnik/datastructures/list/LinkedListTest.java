@@ -10,7 +10,6 @@ public class LinkedListTest {
     private LinkedList listWithZeroElements;
     private LinkedList listWithOneElement;
     private LinkedList listWithFourElements;
-    private LinkedList listWithFiveElements;
 
     @Before
     public void before() {
@@ -24,13 +23,6 @@ public class LinkedListTest {
         value = 'A';
         for (int i = 0; i < 4; i++) {
             listWithFourElements.add(value);
-            value++;
-        }
-
-        listWithFiveElements = new LinkedList();
-        value = 'A';
-        for (int i = 0; i < 5; i++) {
-            listWithFiveElements.add(value);
             value++;
         }
     }
@@ -152,7 +144,7 @@ public class LinkedListTest {
         assertEquals(2, listWithFourElements.lastIndexOf('C'));
         }
 
-        @Test(expected = IndexOutOfBoundsException.class)
+        @Test
     public void testSetValueGreaterThenSize() {
         listWithZeroElements.set("A", 2);
     }

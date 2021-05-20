@@ -1,5 +1,7 @@
 package org.ogorodnik.datastructures.list;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.Arrays;
 
 public class LinkedList implements List{
@@ -13,89 +15,115 @@ public class LinkedList implements List{
     }
 
     public void add(Object value, int index){
-        validateIndexForAdd(index);
-        Node newNode = new Node(value);
-        if (head == null) {
-            head = newNode;
-            tail = newNode;
-        } else if(index == 0){
-            newNode.next = head;
-            head.prev = newNode;
-            head = newNode;
-        } else if(index == size){
-            tail.next = newNode;
-            newNode.prev = tail;
-            tail = newNode;
-        } else {
-            Node current = head.next;
-            int pointer = 1;
-            while(pointer < index){
-                current = current.next;
-                pointer++;
+        try {
+            validateIndexForAdd(index);
+            Node newNode = new Node(value);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else if (index == 0) {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            } else if (index == size) {
+                tail.next = newNode;
+                newNode.prev = tail;
+                tail = newNode;
+            } else {
+                Node current = head.next;
+                int pointer = 1;
+                while (pointer < index) {
+                    current = current.next;
+                    pointer++;
+                }
+                Node temp = current.prev;
+                newNode.prev = temp;
+                newNode.next = current;
+                current.prev = newNode;
+                temp.next = newNode;
             }
-            Node temp = current.prev;
-            newNode.prev = temp;
-            newNode.next = current;
-            current.prev = newNode;
-            temp.next = newNode;
+            size++;
         }
-        size++;
+        catch(IndexOutOfBoundsException e){
+            System.out.println("LinkedList size is " + size +
+                    ". Error: your index is bigger than size or less than ZERO");
+        }
     }
 
     public Object remove(int index){
-        validateIndex(index);
-        Object removed;
-        if(head == tail){
-            removed = head.value;
-            head = null;
-            tail = null;
-        } else if (index == 0) {
-            removed = head.value;
-            head = head.next;
-            head.prev = null;
-        } else if(index == size-1){
-            removed = tail.value;
-            tail = tail.prev;
-            tail.next = null;
+        try {
+            validateIndex(index);
+            Object removed;
+            if (head == tail) {
+                removed = head.value;
+                head = null;
+                tail = null;
+            } else if (index == 0) {
+                removed = head.value;
+                head = head.next;
+                head.prev = null;
+            } else if (index == size - 1) {
+                removed = tail.value;
+                tail = tail.prev;
+                tail.next = null;
+            } else {
+                Node current = head.next;
+                int pointer = 1;
+                while (pointer < index) {
+                    current = current.next;
+                    pointer++;
+                }
+                removed = current.value;
+                Node prev = current.prev;
+                Node next = current.next;
+                prev.next = next;
+                next.prev = prev;
+            }
+            size--;
+            return removed;
         }
-        else {
-            Node current = head.next;
-            int pointer = 1;
+        catch(IndexOutOfBoundsException e){
+            System.out.println("LinkedList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
+        }
+        return null;
+    }
+
+    public Object get(int index){
+        try {
+            Node current = head;
+            validateIndex(index);
+            int pointer = 0;
             while (pointer < index) {
                 current = current.next;
                 pointer++;
             }
-            removed = current.value;
-            Node prev = current.prev;
-            Node next = current.next;
-            prev.next = next;
-            next.prev = prev;
+            return current.value;
         }
-        size--;
-        return removed;
-    }
-
-    public Object get(int index){
-        validateIndex(index);
-        Node current = head;
-        int pointer = 0;
-        while (pointer < index) {
-            current = current.next;
-            pointer++;
+        catch(IndexOutOfBoundsException e){
+            System.out.println("LinkedList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
         }
-        return current.value;
+        return null;
     }
 
     public Object set(Object value, int index){
-        validateIndex(index);
-        Node current = head;
-        int pointer = 0;
-        while (pointer < index) {
-            current = current.next;
-            pointer++;
+        try {
+            validateIndex(index);
+            Node current = head;
+            int pointer = 0;
+            while (pointer < index) {
+                current = current.next;
+                pointer++;
+            }
+            current.value = value;
+            return current.value;
+            }
+        catch(IndexOutOfBoundsException e){
+            System.out.println("LinkedList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
         }
-        current.value = value;
-        return current.value;
+        return null;
     }
 
     public void clear(){
@@ -188,7 +216,7 @@ public class LinkedList implements List{
     }
 
     private void validateIndex(int index){
-            if (index < 0 || index >= size){
+            if (index < 0 || index >= size) {
                 throw new IndexOutOfBoundsException();
             }
     }

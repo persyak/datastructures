@@ -22,44 +22,71 @@ public class ArrayList implements List{
     }
 
     public void add(Object value, int index){
-        validateIndexForAdd(index);
-        if(size == array.length) {
-            int range = size;
-            Object[] extendedArray = new Object[(int)(1.5 * range)];
-            for (int i = 0; i < array.length; i++) {
-                extendedArray[i] = array[i];
+        try {
+            validateIndexForAdd(index);
+            if (size == array.length) {
+                int range = size;
+                Object[] extendedArray = new Object[(int) (1.5 * range)];
+                for (int i = 0; i < array.length; i++) {
+                    extendedArray[i] = array[i];
+                }
+                array = extendedArray;
             }
-            array = extendedArray;
+            array[size] = value;
+            size++;
+            for (int i = size - 1; i > index; i--) {
+                Object temp;
+                temp = array[i - 1];
+                array[i - 1] = array[i];
+                array[i] = temp;
+            }
         }
-        array[size] = value;
-        size++;
-        for(int i=size-1; i>index; i--){
-            Object temp;
-            temp = array[i-1];
-            array[i-1] = array[i];
-            array[i] = temp;
+        catch(IndexOutOfBoundsException e){
+            System.out.println("ArrayList size is " + size +
+                    ". Error: your index is bigger than size or less than ZERO");
         }
     }
 
     public Object remove(int index){
-        validateIndex(index);
-        Object removed = array[index];
-        for (int i = index; i<size-1; i++){
-            array[i]= array[i+1];
+        try {
+            validateIndex(index);
+            Object removed = array[index];
+            for (int i = index; i < size - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            size--;
+            return removed;
         }
-        size--;
-        return removed;
+        catch(IndexOutOfBoundsException e){
+            System.out.println("ArrayList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
+        }
+        return null;
     }
 
     public Object get(int index){
-        validateIndex(index);
-        return array[index];
+        try {
+            validateIndex(index);
+            return array[index];
+        }
+        catch(IndexOutOfBoundsException e){
+            System.out.println("ArrayList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
+        }
+        return null;
     }
 
     public Object set(Object value, int index){
-        validateIndex(index);
-        array[index] = value;
-        return array[index];
+        try {
+            validateIndex(index);
+            array[index] = value;
+            return array[index];
+        }
+        catch(IndexOutOfBoundsException e){
+            System.out.println("ArrayList size is " + size +
+                    ". Error: your index is bigger or equal than size or less than ZERO");
+        }
+        return null;
     }
 
     public void clear(){
