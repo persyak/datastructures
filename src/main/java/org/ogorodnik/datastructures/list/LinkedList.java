@@ -15,7 +15,6 @@ public class LinkedList implements List{
     }
 
     public void add(Object value, int index){
-        try {
             validateIndexForAdd(index);
             Node newNode = new Node(value);
             if (head == null) {
@@ -43,16 +42,10 @@ public class LinkedList implements List{
                 temp.next = newNode;
             }
             size++;
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger than size or less than ZERO");
-        }
     }
 
     public Object remove(int index){
-        try {
-            validateIndex(index);
+        validateIndex(index);
             Object removed;
             if (head == tail) {
                 removed = head.value;
@@ -81,16 +74,9 @@ public class LinkedList implements List{
             }
             size--;
             return removed;
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
-        return null;
     }
 
     public Object get(int index){
-        try {
             Node current = head;
             validateIndex(index);
             int pointer = 0;
@@ -99,31 +85,18 @@ public class LinkedList implements List{
                 pointer++;
             }
             return current.value;
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
-        return null;
     }
 
     public Object set(Object value, int index){
-        try {
-            validateIndex(index);
-            Node current = head;
-            int pointer = 0;
-            while (pointer < index) {
-                current = current.next;
-                pointer++;
-            }
-            current.value = value;
-            return current.value;
-            }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("LinkedList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
+        validateIndex(index);
+        Node current = head;
+        int pointer = 0;
+        while (pointer < index) {
+            current = current.next;
+            pointer++;
         }
-        return null;
+        current.value = value;
+        return current.value;
     }
 
     public void clear(){
@@ -217,13 +190,16 @@ public class LinkedList implements List{
 
     private void validateIndex(int index){
             if (index < 0 || index >= size) {
-                throw new IndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException("LinkedList size is " + size +
+                        ". Error: your index is bigger or equal than size or less than ZERO"){
+                };
             }
     }
 
     private void validateIndexForAdd(int index){
             if (index < 0 || index > size) {
-                throw new IndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException("LinkedList size is " + size +
+                        ". Error: your index is bigger than size or less than ZERO");
         }
     }
 }

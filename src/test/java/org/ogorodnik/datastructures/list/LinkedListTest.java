@@ -144,7 +144,7 @@ public class LinkedListTest {
         assertEquals(2, listWithFourElements.lastIndexOf('C'));
         }
 
-        @Test
+        @Test(expected = IndexOutOfBoundsException.class)
     public void testSetValueGreaterThenSize() {
         listWithZeroElements.set("A", 2);
     }

@@ -22,7 +22,6 @@ public class ArrayList implements List{
     }
 
     public void add(Object value, int index){
-        try {
             validateIndexForAdd(index);
             if (size == array.length) {
                 int range = size;
@@ -40,15 +39,9 @@ public class ArrayList implements List{
                 array[i - 1] = array[i];
                 array[i] = temp;
             }
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger than size or less than ZERO");
-        }
     }
 
     public Object remove(int index){
-        try {
             validateIndex(index);
             Object removed = array[index];
             for (int i = index; i < size - 1; i++) {
@@ -56,37 +49,17 @@ public class ArrayList implements List{
             }
             size--;
             return removed;
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
-        return null;
     }
 
     public Object get(int index){
-        try {
-            validateIndex(index);
-            return array[index];
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
-        return null;
+        validateIndex(index);
+        return array[index];
     }
 
     public Object set(Object value, int index){
-        try {
-            validateIndex(index);
-            array[index] = value;
-            return array[index];
-        }
-        catch(IndexOutOfBoundsException e){
-            System.out.println("ArrayList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO");
-        }
-        return null;
+        validateIndex(index);
+        array[index] = value;
+        return array[index];
     }
 
     public void clear(){
@@ -129,13 +102,15 @@ public class ArrayList implements List{
 
     private void validateIndex(int index){
             if (index < 0 || index >= size){
-                throw new IndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException("LinkedList size is " + size +
+                        ". Error: your index is bigger or equal than size or less than ZERO");
             }
     }
 
     private void validateIndexForAdd(int index){
             if (index < 0 || index > size) {
-                throw new IndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException("LinkedList size is " + size +
+                        ". Error: your index is bigger than size or less than ZERO");
             }
     }
 
