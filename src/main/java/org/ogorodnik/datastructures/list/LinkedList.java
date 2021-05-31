@@ -10,7 +10,7 @@ public class LinkedList implements List, Iterable {
     private int size;
 
     public Iterator iterator(){
-        return new LinkedList.MyIterator();
+        return new MyIterator();
     }
 
     class MyIterator implements Iterator{
