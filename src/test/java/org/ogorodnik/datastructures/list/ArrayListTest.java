@@ -130,4 +130,13 @@ public class ArrayListTest {
     public void testToString(){
         assertEquals("[A, B, C, D, E]", listWithFiveElements.toString());
     }
+
+    @Test
+    public void testIterator(){
+        char value = 'A';
+        for (Object element: listWithFiveElements){
+            assertEquals(value, element);
+            value++;
+        }
+    }
 }

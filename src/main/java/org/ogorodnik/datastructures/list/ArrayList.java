@@ -1,8 +1,9 @@
 package org.ogorodnik.datastructures.list;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class ArrayList implements List{
+public class ArrayList implements List, Iterable{
 
     private final static int INITIAL_CAPACITY= 5;
 
@@ -15,6 +16,28 @@ public class ArrayList implements List{
 
     ArrayList(int initialCapacity) {
         array = new Object[initialCapacity];
+    }
+
+    public Iterator iterator(){
+        return new MyIterator();
+    }
+
+    class MyIterator implements Iterator{
+
+        int index;
+        public boolean hasNext(){
+            return index < size;
+        }
+
+        public Object next(){
+            Object next = get(index);
+            index++;
+            return next;
+        }
+
+        public void remove (){
+            ArrayList.this.remove(index);
+        }
     }
 
     public void add(Object value){
