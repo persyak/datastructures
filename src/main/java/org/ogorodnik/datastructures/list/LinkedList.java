@@ -1,39 +1,11 @@
 package org.ogorodnik.datastructures.list;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
-public class LinkedList implements List, Iterable {
+public class LinkedList extends AbstractList {
 
     private Node head;
     private Node tail;
-    private int size;
-
-    public Iterator iterator(){
-        return new MyIterator();
-    }
-
-    class MyIterator implements Iterator{
-
-        int index;
-        public boolean hasNext(){
-            return index < size;
-        }
-
-        public Object next(){
-            Object next = get(index);
-            index++;
-            return next;
-        }
-
-        public void remove (){
-            LinkedList.this.remove(index);
-        }
-    }
-
-    public void add(Object value) {
-        add(value, size);
-    }
 
     public void add(Object value, int index) {
         validateIndexForAdd(index);
@@ -147,53 +119,44 @@ public class LinkedList implements List, Iterable {
     }
 
     public int indexOf(Object value) {
-        if (isEmpty()) {
-            System.out.println("LinkedList is empty");
-        } else {
-            int index = 0;
-            Node current = head;
-            while (current.next != null) {
-//TODO: лучше на индекс ориентироваться, или на следующий элемент, когда итерируемся по листу?
-// если количество элементов соответствует size, то должно быть без разницы;
-                if (current.value.equals(value)) {
-                    return index;
-                } else {
-                    current = current.next;
-                    index++;
-                }
+        int index = 0;
+        Node current = head;
+        while (current.next != null) {
+            if (current.value.equals(value)) {
+                return index;
+            } else {
+                current = current.next;
+                index++;
             }
         }
         return -1;
     }
 
     public int lastIndexOf(Object value) {
-        if (isEmpty()) {
-            System.out.println("LinkedList is empty");
-        } else {
-            int index = size - 1;
-            Node current = tail;
-            while (index >= 0) {
-                if (current.value.equals(value)) {
-                    return index;
-                } else {
-                    current = current.prev;
-                    index--;
-                }
+        int index = size - 1;
+        Node current = tail;
+        while (index >= 0) {
+            if (current.value.equals(value)) {
+                return index;
+            } else {
+                current = current.prev;
+                index--;
             }
         }
         return -1;
     }
 
     public String toString() {
-        Object[] completedlist = new Object[size];
         Node current = head;
-        int index = 0;
-        while (index < size) {
-            completedlist[index] = current.value;
+        String result = "[";
+        while (current != tail) {
+            result += current.value;
+            result += ",";
             current = current.next;
-            index++;
         }
-        return Arrays.toString(completedlist);
+        result += current.value;
+        result +="]";
+        return result;
     }
 
     class Node {
@@ -203,21 +166,6 @@ public class LinkedList implements List, Iterable {
 
         public Node(Object value) {
             this.value = value;
-        }
-    }
-
-    private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("LinkedList size is " + size +
-                    ". Error: your index is bigger or equal than size or less than ZERO") {
-            };
-        }
-    }
-
-    private void validateIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("LinkedList size is " + size +
-                    ". Error: your index is bigger than size or less than ZERO");
         }
     }
 }

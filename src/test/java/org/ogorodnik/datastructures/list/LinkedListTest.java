@@ -151,7 +151,16 @@ public class LinkedListTest {
 
         @Test
     public void testToString(){
-        assertEquals("[A, B, C, D]", listWithFourElements.toString());
+        assertEquals("[A,B,C,D]", listWithFourElements.toString());
+    }
+
+    @Test
+    public void testIterator(){
+        char value = 'A';
+        for (Object element: listWithFourElements){
+            assertEquals(value, element);
+            value++;
+        }
     }
 }
 

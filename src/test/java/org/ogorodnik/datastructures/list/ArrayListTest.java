@@ -128,7 +128,7 @@ public class ArrayListTest {
 
     @Test
     public void testToString(){
-        assertEquals("[A, B, C, D, E]", listWithFiveElements.toString());
+        assertEquals("[A,B,C,D,E]", listWithFiveElements.toString());
     }
 
     @Test
