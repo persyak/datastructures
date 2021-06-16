@@ -19,7 +19,7 @@ public class ArrayList extends AbstractList {
     public void add(Object value, int index) {
         validateIndexForAdd(index);
         if (size == array.length) {
-            Object[] extendedArray = new Object[(int) (1.5 * size)];
+            Object[] extendedArray = new Object[(int)(1.5 * size+1)];
             System.arraycopy(array, 0, extendedArray, 0, array.length);
             array = extendedArray;
         }

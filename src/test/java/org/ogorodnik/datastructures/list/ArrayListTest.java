@@ -9,12 +9,13 @@ public class ArrayListTest {
     private ArrayList listWithZeroElements;
     private ArrayList listWithFourElements;
     private ArrayList listWithFiveElements;
-    private ArrayList listContainingNull;
+    private ArrayList listWithDefaultCapacity;
 
     @Before
     public void before(){
 
-        listWithZeroElements = new ArrayList();
+        listWithDefaultCapacity = new ArrayList();
+        listWithZeroElements = new ArrayList(0);
 
         listWithFourElements = new ArrayList();
         char value = 'A';
@@ -29,19 +30,14 @@ public class ArrayListTest {
             listWithFiveElements.add(value);
             value++;
         }
-
-        listContainingNull = new ArrayList(3);
-        listContainingNull.add('A');
-        listContainingNull.add(null);
-        listContainingNull.add('B');
     }
 
     @Test
     public void testAddWithNoExtension(){
         char value = 'A';
-        listWithZeroElements.add(value);
-        assertEquals(1, listWithZeroElements.size());
-        assertEquals('A', listWithZeroElements.get(0));
+        listWithDefaultCapacity.add(value);
+        assertEquals(1, listWithDefaultCapacity.size());
+        assertEquals('A', listWithDefaultCapacity.get(0));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -51,11 +47,17 @@ public class ArrayListTest {
 
     @Test
     public void testAddWithExtension(){
-        char value = 'G';
-        listWithFiveElements.add(value);
+        listWithFiveElements.add('G');
         assertEquals(6, listWithFiveElements.size());
-        assertEquals(7, listWithFiveElements.getLength());
+        assertEquals(8, listWithFiveElements.getLength());
         assertEquals('G', listWithFiveElements.get(5));
+        listWithZeroElements.add('G');
+        assertEquals(1, listWithZeroElements.size());
+        assertEquals('G', listWithZeroElements.get(0));
+        listWithZeroElements.add('H');
+        assertEquals(2, listWithZeroElements.size());
+        assertEquals('G', listWithZeroElements.get(0));
+        assertEquals('H', listWithZeroElements.get(1));
     }
 
     @Test
@@ -125,7 +127,8 @@ public class ArrayListTest {
 
     @Test
     public void testIndexOfNull(){
-        assertEquals(1, listContainingNull.indexOf(null));
+        listWithFourElements.set(null, 1);
+        assertEquals(1, listWithFourElements.indexOf(null));
     }
 
     @Test
