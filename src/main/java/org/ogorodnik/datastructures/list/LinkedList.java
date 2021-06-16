@@ -88,8 +88,9 @@ public class LinkedList extends AbstractList {
             current = current.next;
             pointer++;
         }
+        Object previous = current.value;
         current.value = value;
-        return current.value;
+        return previous;
     }
 
     public void clear() {

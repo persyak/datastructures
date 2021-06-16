@@ -20,13 +20,10 @@ public class ArrayList extends AbstractList {
         validateIndexForAdd(index);
         if (size == array.length) {
             Object[] extendedArray = new Object[(int) (1.5 * size)];
-            int a = 0;
-            System.arraycopy(array, a, extendedArray, a, array.length);
+            System.arraycopy(array, 0, extendedArray, 0, array.length);
             array = extendedArray;
         }
-        for (int i = size; i > index; i--) {
-            array[i] = array[i-1];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -34,9 +31,8 @@ public class ArrayList extends AbstractList {
     public Object remove(int index){
             validateIndex(index);
             Object removed = array[index];
-            for (int i = index; i < size - 1; i++) {
-                array[i] = array[i + 1];
-            }
+            System.arraycopy(array, index+1, array, index, size-1-index);
+            array[size-1] = null;
             size--;
             return removed;
     }
@@ -48,8 +44,9 @@ public class ArrayList extends AbstractList {
 
     public Object set(Object value, int index){
         validateIndex(index);
+        Object previous = array[index];
         array[index] = value;
-        return array[index];
+        return previous;
     }
 
     public void clear(){
@@ -72,13 +69,20 @@ public class ArrayList extends AbstractList {
     }
 
     public int indexOf(Object value){
-        for(int i=0; i<size; i++) {
-            if (array[i].equals(value)) {
-                return i;
+        if(value == null){
+            for(int i=0; i<size; i++){
+                if(array[i] == null){
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (array[i].equals(value)) {
+                    return i;
+                }
             }
         }
         return -1;
-
     }
 
     public int lastIndexOf(Object value){

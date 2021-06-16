@@ -109,7 +109,8 @@ public class LinkedListTest {
         public  void testSet(){
             Object setter = listWithFourElements.set('E', 2);
             assertEquals(4, listWithFourElements.size());
-            assertEquals('E', setter);
+            assertEquals('E', listWithFourElements.get(2));
+            assertEquals('C', setter);
         }
 
         @Test

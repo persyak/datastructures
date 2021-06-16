@@ -9,6 +9,7 @@ public class ArrayListTest {
     private ArrayList listWithZeroElements;
     private ArrayList listWithFourElements;
     private ArrayList listWithFiveElements;
+    private ArrayList listContainingNull;
 
     @Before
     public void before(){
@@ -28,6 +29,11 @@ public class ArrayListTest {
             listWithFiveElements.add(value);
             value++;
         }
+
+        listContainingNull = new ArrayList(3);
+        listContainingNull.add('A');
+        listContainingNull.add(null);
+        listContainingNull.add('B');
     }
 
     @Test
@@ -85,7 +91,8 @@ public class ArrayListTest {
     public void testSet(){
         Object setter = listWithFourElements.set('K', 2);
         assertEquals(4, listWithFourElements.size());
-        assertEquals('K', setter);
+        assertEquals('C', setter);
+        assertEquals('K', listWithFourElements.get(2));
         assertEquals('D', listWithFourElements.get(3));
     }
 
@@ -113,7 +120,12 @@ public class ArrayListTest {
 
     @Test
     public void testIndexOf(){
-        assertEquals(0, listWithFiveElements.indexOf('A'));
+        assertEquals(2, listWithFiveElements.indexOf('C'));
+    }
+
+    @Test
+    public void testIndexOfNull(){
+        assertEquals(1, listContainingNull.indexOf(null));
     }
 
     @Test
