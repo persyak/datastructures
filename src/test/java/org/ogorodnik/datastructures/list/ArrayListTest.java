@@ -6,18 +6,20 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ArrayListTest {
-    private ArrayList listWithDefaultCapacity;
     private ArrayList listWithZeroElements;
+    private ArrayList listWithOneElement;
     private ArrayList listWithFiveElements;
 
     @Before
-    public void before(){
-
-        listWithDefaultCapacity = new ArrayList();
+    public void before() {
         listWithZeroElements = new ArrayList(0);
 
-        listWithFiveElements = new ArrayList();
+        listWithOneElement = new ArrayList();
         char value = 'A';
+        listWithOneElement.add(value);
+
+        listWithFiveElements = new ArrayList();
+        value = 'A';
         for (int i = 0; i < 5; i++) {
             listWithFiveElements.add(value);
             value++;
@@ -25,20 +27,20 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testAddWithNoExtension(){
-        char value = 'A';
-        listWithDefaultCapacity.add(value);
-        assertEquals(1, listWithDefaultCapacity.size());
-        assertEquals('A', listWithDefaultCapacity.get(0));
+    public void testAddWithNoExtension() {
+        char value = 'B';
+        listWithOneElement.add(value);
+        assertEquals(2, listWithOneElement.size());
+        assertEquals('B', listWithOneElement.get(1));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testAddValueGreaterThenSize() {
-        listWithDefaultCapacity.add("A", 2);
+        listWithOneElement.add("A", 2);
     }
 
     @Test
-    public void testAddWithExtension(){
+    public void testAddWithExtension() {
         listWithFiveElements.add('G');
         assertEquals(6, listWithFiveElements.size());
         assertEquals(8, listWithFiveElements.getLength());
@@ -53,7 +55,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testAddByIndex(){
+    public void testAddByIndex() {
         char value = 'H';
         listWithFiveElements.add(value, 2);
         assertEquals('H', listWithFiveElements.get(2));
@@ -62,7 +64,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testRemove(){
+    public void testRemove() {
         Object removed = listWithFiveElements.remove(1);
         assertEquals(4, listWithFiveElements.size());
         assertEquals('B', removed);
@@ -73,16 +75,16 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testGet(){
-        char value ='A';
-        for(int i=0; i<5; i++){
+    public void testGet() {
+        char value = 'A';
+        for (int i = 0; i < 5; i++) {
             assertEquals(value, listWithFiveElements.get(i));
             value++;
         }
     }
 
     @Test
-    public void testSet(){
+    public void testSet() {
         Object setter = listWithFiveElements.set('K', 2);
         assertEquals(5, listWithFiveElements.size());
         assertEquals('C', setter);
@@ -91,40 +93,40 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testClear(){
+    public void testClear() {
         listWithFiveElements.clear();
         assertTrue(listWithFiveElements.isEmpty());
         assertEquals(0, listWithFiveElements.size());
     }
 
     @Test
-    public void testSize(){
+    public void testSize() {
         assertEquals(5, listWithFiveElements.size());
     }
 
     @Test
-    public void testIsEmpty(){
+    public void testIsEmpty() {
         assertTrue(listWithZeroElements.isEmpty());
     }
 
     @Test
-    public void testContains(){
+    public void testContains() {
         assertTrue(listWithFiveElements.contains('B'));
     }
 
     @Test
-    public void testIndexOf(){
+    public void testIndexOf() {
         assertEquals(2, listWithFiveElements.indexOf('C'));
     }
 
     @Test
-    public void testIndexOfNull(){
+    public void testIndexOfNull() {
         listWithFiveElements.set(null, 1);
         assertEquals(1, listWithFiveElements.indexOf(null));
     }
 
     @Test
-    public void testLastIndexOf(){
+    public void testLastIndexOf() {
         assertEquals(2, listWithFiveElements.lastIndexOf('C'));
     }
 
@@ -134,14 +136,14 @@ public class ArrayListTest {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
         assertEquals("[A,B,C,D,E]", listWithFiveElements.toString());
     }
 
     @Test
-    public void testIterator(){
+    public void testIterator() {
         char value = 'A';
-        for (Object element: listWithFiveElements){
+        for (Object element : listWithFiveElements) {
             assertEquals(value, element);
             value++;
         }
