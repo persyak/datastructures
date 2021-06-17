@@ -70,15 +70,15 @@ public class ArrayList extends AbstractList {
 
     public int indexOf(Object value){
         if(value == null){
-            for(int i=0; i<size; i++){
-                if(array[i] == null){
-                    return i;
+            for(int index=0; index<size; index++){
+                if(array[index] == null){
+                    return index;
                 }
             }
         } else {
-            for (int i = 0; i < size; i++) {
-                if (array[i].equals(value)) {
-                    return i;
+            for (int index = 0; index < size; index++) {
+                if (array[index].equals(value)) {
+                    return index;
                 }
             }
         }

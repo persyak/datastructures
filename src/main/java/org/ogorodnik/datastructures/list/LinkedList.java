@@ -1,7 +1,5 @@
 package org.ogorodnik.datastructures.list;
 
-import java.util.Arrays;
-
 public class LinkedList extends AbstractList {
 
     private Node head;
@@ -10,7 +8,7 @@ public class LinkedList extends AbstractList {
     public void add(Object value, int index) {
         validateIndexForAdd(index);
         Node newNode = new Node(value);
-        if (head == null) {
+        if (isEmpty()) {
             head = newNode;
             tail = newNode;
         } else if (index == 0) {
@@ -22,12 +20,7 @@ public class LinkedList extends AbstractList {
             newNode.prev = tail;
             tail = newNode;
         } else {
-            Node current = head.next;
-            int pointer = 1;
-            while (pointer < index) {
-                current = current.next;
-                pointer++;
-            }
+            Node current = getNode(index);
             Node temp = current.prev;
             newNode.prev = temp;
             newNode.next = current;
@@ -53,12 +46,7 @@ public class LinkedList extends AbstractList {
             tail = tail.prev;
             tail.next = null;
         } else {
-            Node current = head.next;
-            int pointer = 1;
-            while (pointer < index) {
-                current = current.next;
-                pointer++;
-            }
+            Node current = getNode(index);
             removed = current.value;
             Node prev = current.prev;
             Node next = current.next;
@@ -69,15 +57,31 @@ public class LinkedList extends AbstractList {
         return removed;
     }
 
-    public Object get(int index) {
-        Node current = head;
-        validateIndex(index);
-        int pointer = 0;
+    private Node getNode(int index) {
+        Node current = head.next;
+        int pointer = 1;
         while (pointer < index) {
             current = current.next;
             pointer++;
         }
-        return current.value;
+        return current;
+    }
+
+    public Object get(int index) {
+        validateIndex(index);
+        if (index < size / 2) {
+            Node current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+            return current.value;
+        } else {
+            Node current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+            return current.value;
+        }
     }
 
     public Object set(Object value, int index) {
@@ -94,17 +98,9 @@ public class LinkedList extends AbstractList {
     }
 
     public void clear() {
-        if (isEmpty()) {
-            System.out.println("LinkedList is empty");
-        } else {
-            while (head != tail) {
-                head = head.next;
-                head.prev = null;
-            }
-            head = null;
-            tail = null;
-            size = 0;
-        }
+        head = null;
+        tail = null;
+        size = 0;
     }
 
     public int size() {
@@ -120,28 +116,42 @@ public class LinkedList extends AbstractList {
     }
 
     public int indexOf(Object value) {
-        int index = 0;
         Node current = head;
-        while (current.next != null) {
-            if (current.value.equals(value)) {
-                return index;
-            } else {
+        if (value == null) {
+            for (int index = 0; index < size; index++) {
+                if (current.value == null) {
+                    return index;
+                }
                 current = current.next;
-                index++;
+            }
+        } else {
+            for (int index = 0; index < size; index++) {
+                if (current.value.equals(value)) {
+                    return index;
+                }
+                current = current.next;
+
             }
         }
         return -1;
     }
 
     public int lastIndexOf(Object value) {
-        int index = size - 1;
         Node current = tail;
-        while (index >= 0) {
-            if (current.value.equals(value)) {
-                return index;
-            } else {
+        if (value == null) {
+            for (int index = size - 1; index >= 0; index--) {
+                if (current.value == null) {
+                    return index;
+                }
                 current = current.prev;
-                index--;
+            }
+        } else {
+            for (int index = size - 1; index >= 0; index--) {
+                if (current.value.equals(value)) {
+                    return index;
+                } else {
+                    current = current.prev;
+                }
             }
         }
         return -1;
@@ -156,7 +166,7 @@ public class LinkedList extends AbstractList {
             current = current.next;
         }
         result += current.value;
-        result +="]";
+        result += "]";
         return result;
     }
 
@@ -165,7 +175,7 @@ public class LinkedList extends AbstractList {
         Node next;
         Node prev;
 
-        public Node(Object value) {
+        private Node(Object value) {
             this.value = value;
         }
     }
