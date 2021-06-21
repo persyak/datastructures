@@ -170,7 +170,7 @@ public class LinkedList extends AbstractList {
         return result;
     }
 
-    class Node {
+    private static class Node {
         Object value;
         Node next;
         Node prev;
