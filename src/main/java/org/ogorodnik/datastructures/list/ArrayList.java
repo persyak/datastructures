@@ -1,20 +1,20 @@
 package org.ogorodnik.datastructures.list;
 
-public class ArrayList extends AbstractList {
+public class ArrayList <T> extends AbstractList <T> {
 
     private final static int INITIAL_CAPACITY = 5;
 
     private Object[] array;
 
-    ArrayList() {
+    ArrayList () {
         this(INITIAL_CAPACITY);
     }
 
-    ArrayList(int initialCapacity) {
-        array = new Object[initialCapacity];
+    ArrayList (int initialCapacity) {
+        this.array = new Object [initialCapacity];
     }
 
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         validateIndexForAdd(index);
         if (size == array.length) {
             Object[] extendedArray = new Object[(int) (1.5 * size + 1)];
@@ -26,23 +26,23 @@ public class ArrayList extends AbstractList {
         size++;
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
-        Object removed = array[index];
+        T removed = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - 1 - index);
         array[size - 1] = null;
         size--;
         return removed;
     }
 
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
-        return array[index];
+        return (T) this.array[index];
     }
 
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         validateIndex(index);
-        Object previous = array[index];
+        T previous = (T) array[index];
         array[index] = value;
         return previous;
     }
@@ -62,11 +62,11 @@ public class ArrayList extends AbstractList {
         return size == 0;
     }
 
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) != -1;
     }
 
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         if (value == null) {
             for (int index = 0; index < size; index++) {
                 if (array[index] == null) {
@@ -83,7 +83,7 @@ public class ArrayList extends AbstractList {
         return -1;
     }
 
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         if (value == null) {
             for (int index = (size - 1); index >= 0; index--) {
                 if (array[index] == null) {

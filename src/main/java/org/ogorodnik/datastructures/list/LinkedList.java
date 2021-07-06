@@ -1,13 +1,13 @@
 package org.ogorodnik.datastructures.list;
 
-public class LinkedList extends AbstractList {
+public class LinkedList<T> extends AbstractList<T> {
 
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
 
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         validateIndexForAdd(index);
-        Node newNode = new Node(value);
+        Node <T> newNode = new Node <>(value);
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
@@ -20,8 +20,8 @@ public class LinkedList extends AbstractList {
             newNode.prev = tail;
             tail = newNode;
         } else {
-            Node current = getNode(index);
-            Node temp = current.prev;
+            Node <T> current = getNode(index);
+            Node <T> temp = current.prev;
             newNode.prev = temp;
             newNode.next = current;
             current.prev = newNode;
@@ -30,9 +30,9 @@ public class LinkedList extends AbstractList {
         size++;
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
-        Object removed;
+        T removed;
         if (head == tail) {
             removed = head.value;
             head = null;
@@ -46,10 +46,10 @@ public class LinkedList extends AbstractList {
             tail = tail.prev;
             tail.next = null;
         } else {
-            Node current = getNode(index);
+            Node <T> current = getNode(index);
             removed = current.value;
-            Node prev = current.prev;
-            Node next = current.next;
+            Node <T> prev = current.prev;
+            Node <T> next = current.next;
             prev.next = next;
             next.prev = prev;
         }
@@ -57,8 +57,8 @@ public class LinkedList extends AbstractList {
         return removed;
     }
 
-    private Node getNode(int index) {
-        Node current = head.next;
+    private Node <T> getNode(int index) {
+        Node <T> current = head.next;
         int pointer = 1;
         while (pointer < index) {
             current = current.next;
@@ -67,16 +67,16 @@ public class LinkedList extends AbstractList {
         return current;
     }
 
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
         if (index < size / 2) {
-            Node current = head;
+            Node <T> current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
             return current.value;
         } else {
-            Node current = tail;
+            Node <T> current = tail;
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
@@ -84,15 +84,15 @@ public class LinkedList extends AbstractList {
         }
     }
 
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         validateIndex(index);
-        Node current = head;
+        Node <T> current = head;
         int pointer = 0;
         while (pointer < index) {
             current = current.next;
             pointer++;
         }
-        Object previous = current.value;
+        T previous = current.value;
         current.value = value;
         return previous;
     }
@@ -111,12 +111,12 @@ public class LinkedList extends AbstractList {
         return size == 0;
     }
 
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) != -1;
     }
 
-    public int indexOf(Object value) {
-        Node current = head;
+    public int indexOf(T value) {
+        Node <T> current = head;
         if (value == null) {
             for (int index = 0; index < size; index++) {
                 if (current.value == null) {
@@ -136,8 +136,8 @@ public class LinkedList extends AbstractList {
         return -1;
     }
 
-    public int lastIndexOf(Object value) {
-        Node current = tail;
+    public int lastIndexOf(T value) {
+        Node <T> current = tail;
         if (value == null) {
             for (int index = size - 1; index >= 0; index--) {
                 if (current.value == null) {
@@ -158,7 +158,7 @@ public class LinkedList extends AbstractList {
     }
 
     public String toString() {
-        Node current = head;
+        Node <T> current = head;
         String result = "[";
         while (current != tail) {
             result += current.value;
@@ -170,13 +170,13 @@ public class LinkedList extends AbstractList {
         return result;
     }
 
-    private static class Node {
-        Object value;
-        Node next;
-        Node prev;
+    private static class Node<E> {
+        E value;
+        Node <E> next;
+        Node <E> prev;
 
 
-        private Node(Object value) {
+        private Node(E value) {
             this.value = value;
         }
     }

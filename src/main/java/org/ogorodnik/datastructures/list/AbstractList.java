@@ -2,14 +2,14 @@ package org.ogorodnik.datastructures.list;
 
 import java.util.Iterator;
 
-public abstract class AbstractList implements List, Iterable {
+public abstract class AbstractList <T> implements List<T>, Iterable<T> {
     int size;
 
-    public Iterator iterator() {
+    public Iterator <T> iterator() {
         return new MyIterator();
     }
 
-    class MyIterator implements Iterator {
+    class MyIterator implements Iterator <T> {
         private int index = 0;
         private boolean removable = false;
 
@@ -17,8 +17,8 @@ public abstract class AbstractList implements List, Iterable {
             return index < size;
         }
 
-        public Object next() {
-            Object next = get(index);
+        public T next() {
+            T next = get(index);
             index++;
             removable = true;
             return next;
@@ -35,7 +35,7 @@ public abstract class AbstractList implements List, Iterable {
         }
     }
 
-    public void add(Object value) {
+    public void add(T value) {
         add(value, size);
     }
 

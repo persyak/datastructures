@@ -5,16 +5,16 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ArrayListTest extends AbstractListTest {
+public class ArrayListTest <T> extends AbstractListTest {
 
     @Override
     AbstractList getList() {
-        return new ArrayList();
+        return new ArrayList<> ();
     }
 
     @Test
     public void testAddWithNoExtension() {
-        ArrayList arrayList = new ArrayList();
+        ArrayList <Object> arrayList = new ArrayList<>();
         arrayList.add('A');
         arrayList.add('B');
         assertEquals(2, arrayList.size());

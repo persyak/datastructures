@@ -17,11 +17,10 @@ public abstract class AbstractListTest {
         listWithZeroElements = getList();
 
         listWithOneElement = getList();
-        char value = 'A';
-        listWithOneElement.add(value);
+        listWithOneElement.add('A');
 
         listWithFiveElements = getList();
-        value = 'A';
+        char value = 'A';
         for (int i = 0; i < 5; i++) {
             listWithFiveElements.add(value);
             value++;
