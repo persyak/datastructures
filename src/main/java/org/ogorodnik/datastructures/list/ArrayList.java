@@ -6,7 +6,7 @@ public class ArrayList <T> extends AbstractList <T> {
 
     private Object[] array;
 
-    ArrayList () {
+    public ArrayList() {
         this(INITIAL_CAPACITY);
     }
 

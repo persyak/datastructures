@@ -98,8 +98,7 @@ public class LinkedList<T> extends AbstractList<T> {
     }
 
     public void clear() {
-        head = null;
-        tail = null;
+        head = tail = null;
         size = 0;
     }
 
