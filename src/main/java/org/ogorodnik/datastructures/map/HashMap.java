@@ -2,62 +2,116 @@ package org.ogorodnik.datastructures.map;
 
 import org.ogorodnik.datastructures.list.ArrayList;
 
-import java.lang.reflect.Array;
-
 public class HashMap implements Map {
     private static final int INITIAL_CAPACITY = 5;
 
     private ArrayList[] buckets = new ArrayList[INITIAL_CAPACITY];
     int size;
 
+    private int getHashIndex(Object key) {
+        return key.hashCode() % buckets.length;
+    }
+
     public Object put(Object key, Object value) {
         Object oldValue = null;
-        ArrayList<Entry> bucket = buckets[key.hashCode() % buckets.length];
-        if (size == 0) {
-            bucket.add(new Entry(key, value));
-        } else if (bucket.isEmpty()) {
-            bucket.add(new Entry(key, value));
+        ArrayList<Entry> bucket;
+        int index = getHashIndex(key);
+        if (!contains(key)) {
+            if (buckets[index] == null) {
+                bucket = buckets[index] = new ArrayList();
+            } else {
+                bucket = buckets[index];
+            }
+            if (size == 0) {
+                bucket.add(new Entry(key, value));
+            } else if (bucket.isEmpty()) {
+                bucket.add(new Entry(key, value));
+            }
+            size++;
         } else {
+            bucket = buckets[index];
             for (int i = 0; i < bucket.size(); i++) {
                 if (bucket.get(i).key.equals(key)) {
                     oldValue = bucket.get(i).value;
                     bucket.get(i).value = value;
-                } else {
-                    bucket.add(new Entry(key, value));
                 }
             }
         }
-        size++;
         return oldValue;
     }
 
-    @Override
     public Object get(Object key) {
+        if (contains(key)) {
+            ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+            for (int i = 0; i < bucket.size(); i++) {
+                if (bucket.get(i).key.equals(key)) {
+                    return bucket.get(i).value;
+                }
+            }
+        }
         return null;
     }
 
-    @Override
     public Object remove(Object key) {
-        return null;
+        Object oldValue = null;
+        if (contains(key)) {
+            ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+            for (int i = 0; i < bucket.size(); i++) {
+                if (bucket.get(i).key.equals(key)) {
+                    oldValue = bucket.get(i).value;
+                    bucket.remove(i);
+                    size--;
+                }
+            }
+        }
+        return oldValue;
     }
 
-    @Override
-    public Object contains(Object key) {
-        return null;
+    public boolean contains(Object key) {
+        int index = getHashIndex(key);
+        if (isEmpty() || buckets[index] == null) {
+            return false;
+        } else {
+            ArrayList<Entry> bucket = buckets[index];
+            for (int i = 0; i < bucket.size(); i++) {
+                if (bucket.get(i).key.equals(key)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
-    @Override
     public Object putIfAbsent(Object key, Object value) {
-        return null;
+        Object oldValue = null;
+        if (!contains(key)) {
+            ArrayList<Entry> bucket;
+            int index = getHashIndex(key);
+            if (buckets[index] == null) {
+                bucket = buckets[index] = new ArrayList();
+            } else {
+                bucket = buckets[index];
+            }
+            if (size == 0) {
+                bucket.add(new Entry(key, value));
+            } else if (bucket.isEmpty()) {
+                bucket.add(new Entry(key, value));
+            }
+            size++;
+        } else {
+            oldValue = get(key);
+        }
+        return oldValue;
     }
 
-    @Override
     public int size() {
-        return 0;
+        return size;
     }
 
-    @Override
     public boolean isEmpty() {
+        if (size() == 0) {
+            return true;
+        }
         return false;
     }
 

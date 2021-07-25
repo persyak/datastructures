@@ -10,7 +10,7 @@ public class ArrayList <T> extends AbstractList <T> {
         this(INITIAL_CAPACITY);
     }
 
-    ArrayList (int initialCapacity) {
+    public ArrayList (int initialCapacity) {
         this.array = new Object [initialCapacity];
     }
 
