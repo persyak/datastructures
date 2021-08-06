@@ -3,6 +3,7 @@ package org.ogorodnik.datastructures.map;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -67,10 +68,17 @@ public class HashMapTest {
 
     @Test
     public void testIterator(){
-        hashMap.put("key1", 'A');
-        hashMap.put("key2", 'B');
-        hashMap.put("key3", 'C');
-        hashMap.put("key4", 'D');
+//        hashMap.put("key1", 'A');
+//        hashMap.put("key2", 'B');
+//        hashMap.put("key3", 'C');
+//        hashMap.put("key4", 'D');
+//        hashMap.put("key5", 'E');
+//        hashMap.put("key6", 'F');
+//
+        Random random = new Random();
+        for(int i=0; i<101; i++){
+            hashMap.put(i, random.nextInt(1000)+1);
+        }
 
         for(Object element: hashMap){
             System.out.println(element);

@@ -13,7 +13,8 @@ public class HashMap implements Map, Iterable {
     int size;
 
     private int getHashIndex(Object key) {
-        return key.hashCode() % buckets.length;
+        int index = key.hashCode() % buckets.length;
+        return index;
     }
 
     public Object put(Object key, Object value) {
@@ -26,11 +27,7 @@ public class HashMap implements Map, Iterable {
             } else {
                 bucket = buckets[index];
             }
-            if (size == 0) {
-                bucket.add(new Entry(key, value));
-            } else if (bucket.isEmpty()) {
-                bucket.add(new Entry(key, value));
-            }
+            bucket.add(new Entry(key, value));
             size++;
         } else {
             bucket = buckets[index];
@@ -133,7 +130,10 @@ public class HashMap implements Map, Iterable {
         private boolean removable = false;
 
         private int getBucketNumber(int bucketNumber){
-            if(buckets[bucketNumber] == null){
+            if(bucketNumber == 4){
+                bucketNumber = bucketNumber;
+            }
+            else if(buckets[bucketNumber] == null){
                 bucketNumber+=1;
                 getBucketNumber(bucketNumber);
             }
