@@ -1,8 +1,12 @@
 package org.ogorodnik.datastructures.map;
 
+import org.ogorodnik.datastructures.list.AbstractList;
 import org.ogorodnik.datastructures.list.ArrayList;
 
-public class HashMap implements Map {
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class HashMap implements Map, Iterable {
     private static final int INITIAL_CAPACITY = 5;
 
     private ArrayList[] buckets = new ArrayList[INITIAL_CAPACITY];
@@ -31,7 +35,7 @@ public class HashMap implements Map {
         } else {
             bucket = buckets[index];
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
+                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
                     oldValue = bucket.get(i).value;
                     bucket.get(i).value = value;
                 }
@@ -44,7 +48,7 @@ public class HashMap implements Map {
         if (contains(key)) {
             ArrayList<Entry> bucket = buckets[getHashIndex(key)];
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
+                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
                     return bucket.get(i).value;
                 }
             }
@@ -57,7 +61,7 @@ public class HashMap implements Map {
         if (contains(key)) {
             ArrayList<Entry> bucket = buckets[getHashIndex(key)];
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
+                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
                     oldValue = bucket.get(i).value;
                     bucket.remove(i);
                     size--;
@@ -74,7 +78,7 @@ public class HashMap implements Map {
         } else {
             ArrayList<Entry> bucket = buckets[index];
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
+                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
                     return true;
                 }
             }
@@ -115,7 +119,64 @@ public class HashMap implements Map {
         return false;
     }
 
-    public static class Entry {
+    @Override
+    public Iterator iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator {
+        private int arrayListIndex = 0;
+        private int hashMapIndex = 0;
+        private int bucketNumber = 0;
+        private int arrayListIndexToRemove = 0;
+        private int bucketNumberToRemove = 0;
+        private boolean removable = false;
+
+        private int getBucketNumber(int x){
+            if(buckets[x] == null){
+                x+=1;
+                getBucketNumber(x);
+            }
+            return x;
+        }
+
+        public boolean hasNext() {
+            return hashMapIndex < size;
+        }
+
+        public Object next() {
+            bucketNumber = getBucketNumber(bucketNumber);
+
+            ArrayList bucket = buckets[bucketNumber];
+            Entry element = (Entry) bucket.get(arrayListIndex);
+            arrayListIndexToRemove = arrayListIndex;
+            bucketNumberToRemove = bucketNumber;
+            arrayListIndex++;
+            hashMapIndex++;
+            removable = true;
+
+            if(arrayListIndex == buckets[bucketNumber].size()){
+                bucketNumber++;
+                arrayListIndex = 0;
+            }
+
+            return element.value;
+        }
+
+        public void remove() {
+            if (!removable) {
+                throw new IllegalStateException();
+            }
+            ArrayList bucket = buckets[bucketNumberToRemove];
+            Entry element = (Entry) bucket.get(arrayListIndexToRemove);
+            Object key = element.key;
+            HashMap.this.remove(key);
+            hashMapIndex--;
+            removable = false;
+        }
+    }
+
+    private static class Entry {
         private Object key;
         private Object value;
 
@@ -123,5 +184,19 @@ public class HashMap implements Map {
             this.key = key;
             this.value = value;
         }
+
+//        public boolean equals(Object o){
+//            if(o == null){
+//                return false;
+//            }
+//            if(o == key){
+//                return true;
+//            }
+//
+//            if(o.getClass() == Object.class){
+//                return true;
+//            }
+//            return false;
+//        }
     }
 }

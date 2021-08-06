@@ -2,6 +2,8 @@ package org.ogorodnik.datastructures.map;
 
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 public class HashMapTest {
@@ -61,5 +63,33 @@ public class HashMapTest {
         assertNull(hashMap.putIfAbsent("key3", "value3"));
         assertEquals(3, hashMap.size());
         assertNull(hashMap.get("key3"));
+    }
+
+    @Test
+    public void testIterator(){
+        hashMap.put("key1", 'A');
+        hashMap.put("key2", 'B');
+        hashMap.put("key3", 'C');
+        hashMap.put("key4", 'D');
+
+        for(Object element: hashMap){
+            System.out.println(element);
+        }
+    }
+
+    @Test
+    public void testIteratorRemove(){
+        hashMap.put("key1", 'A');
+        hashMap.put("key2", 'B');
+        hashMap.put("key3", 'C');
+        hashMap.put("key4", 'D');
+
+        Iterator iterator = hashMap.iterator();
+        while(iterator.hasNext()){
+            if(iterator.next().equals('A')){
+                iterator.remove();
+            }
+        }
+        System.out.println(hashMap.contains('A'));
     }
 }
