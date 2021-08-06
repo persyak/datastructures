@@ -90,6 +90,6 @@ public class HashMapTest {
                 iterator.remove();
             }
         }
-        System.out.println(hashMap.contains('A'));
+        assertFalse(hashMap.contains('A'));
     }
 }

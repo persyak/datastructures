@@ -132,12 +132,12 @@ public class HashMap implements Map, Iterable {
         private int bucketNumberToRemove = 0;
         private boolean removable = false;
 
-        private int getBucketNumber(int x){
-            if(buckets[x] == null){
-                x+=1;
-                getBucketNumber(x);
+        private int getBucketNumber(int bucketNumber){
+            if(buckets[bucketNumber] == null){
+                bucketNumber+=1;
+                getBucketNumber(bucketNumber);
             }
-            return x;
+            return bucketNumber;
         }
 
         public boolean hasNext() {
@@ -184,19 +184,5 @@ public class HashMap implements Map, Iterable {
             this.key = key;
             this.value = value;
         }
-
-//        public boolean equals(Object o){
-//            if(o == null){
-//                return false;
-//            }
-//            if(o == key){
-//                return true;
-//            }
-//
-//            if(o.getClass() == Object.class){
-//                return true;
-//            }
-//            return false;
-//        }
     }
 }
