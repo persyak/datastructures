@@ -12,11 +12,11 @@ public class HashMapTest {
 
     @Test
     public void testPut(){
-        assertNull(hashMap.put("key1", "value1"));
+        assertNull(hashMap.put(null, "value1"));
         assertEquals(1, hashMap.size());
         assertNull(hashMap.put("key2", "value2"));
         assertEquals(2, hashMap.size());
-        assertEquals("value1", hashMap.put("key1", "value3"));
+        assertEquals("value1", hashMap.put(null, "value3"));
         assertEquals(2, hashMap.size());
     }
 

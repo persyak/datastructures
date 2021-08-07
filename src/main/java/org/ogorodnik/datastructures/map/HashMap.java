@@ -1,10 +1,9 @@
 package org.ogorodnik.datastructures.map;
 
-import org.ogorodnik.datastructures.list.AbstractList;
 import org.ogorodnik.datastructures.list.ArrayList;
 
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class HashMap implements Map, Iterable {
     private static final int INITIAL_CAPACITY = 5;
@@ -13,39 +12,43 @@ public class HashMap implements Map, Iterable {
     int size;
 
     private int getHashIndex(Object key) {
-        int index = key.hashCode() % buckets.length;
+        int index = Math.abs(Objects.hashCode(key)) % buckets.length;
         return index;
+    }
+
+    private boolean isFirstKeyEqualSecondKey(Object key1, Object key2) {
+        return (Objects.equals(key1, key2));
     }
 
     public Object put(Object key, Object value) {
         Object oldValue = null;
+        boolean updated = false;
         ArrayList<Entry> bucket;
         int index = getHashIndex(key);
-        if (!contains(key)) {
-            if (buckets[index] == null) {
-                bucket = buckets[index] = new ArrayList();
-            } else {
-                bucket = buckets[index];
-            }
-            bucket.add(new Entry(key, value));
-            size++;
+        if (buckets[index] == null) {
+            bucket = buckets[index] = new ArrayList();
         } else {
             bucket = buckets[index];
-            for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
-                    oldValue = bucket.get(i).value;
-                    bucket.get(i).value = value;
-                }
+        }
+        for (int i = 0; i < bucket.size(); i++) {
+            if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
+                oldValue = bucket.get(i).value;
+                bucket.get(i).value = value;
+                updated = true;
             }
+        }
+        if (!updated) {
+            bucket.add(new Entry(key, value));
+            size++;
         }
         return oldValue;
     }
 
     public Object get(Object key) {
-        if (contains(key)) {
-            ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+        ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+        if (bucket != null) {
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
+                if (bucket.get(i).key.equals(key)) {
                     return bucket.get(i).value;
                 }
             }
@@ -55,10 +58,10 @@ public class HashMap implements Map, Iterable {
 
     public Object remove(Object key) {
         Object oldValue = null;
-        if (contains(key)) {
-            ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+        ArrayList<Entry> bucket = buckets[getHashIndex(key)];
+        if(bucket != null) {
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
+                if (bucket.get(i).key.equals(key)) {
                     oldValue = bucket.get(i).value;
                     bucket.remove(i);
                     size--;
@@ -75,7 +78,7 @@ public class HashMap implements Map, Iterable {
         } else {
             ArrayList<Entry> bucket = buckets[index];
             for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key) && bucket.get(i).key.hashCode() == key.hashCode()) {
+                if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
                     return true;
                 }
             }
@@ -110,10 +113,7 @@ public class HashMap implements Map, Iterable {
     }
 
     public boolean isEmpty() {
-        if (size() == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     @Override
@@ -129,12 +129,11 @@ public class HashMap implements Map, Iterable {
         private int bucketNumberToRemove = 0;
         private boolean removable = false;
 
-        private int getBucketNumber(int bucketNumber){
-            if(bucketNumber == 4){
+        private int getBucketNumber(int bucketNumber) {
+            if (bucketNumber == 4) {
                 bucketNumber = bucketNumber;
-            }
-            else if(buckets[bucketNumber] == null){
-                bucketNumber+=1;
+            } else if (buckets[bucketNumber] == null) {
+                bucketNumber += 1;
                 getBucketNumber(bucketNumber);
             }
             return bucketNumber;
@@ -155,7 +154,7 @@ public class HashMap implements Map, Iterable {
             hashMapIndex++;
             removable = true;
 
-            if(arrayListIndex == buckets[bucketNumber].size()){
+            if (arrayListIndex == buckets[bucketNumber].size()) {
                 bucketNumber++;
                 arrayListIndex = 0;
             }
@@ -180,7 +179,7 @@ public class HashMap implements Map, Iterable {
         private Object key;
         private Object value;
 
-        public Entry(Object key, Object value) {
+        private Entry(Object key, Object value) {
             this.key = key;
             this.value = value;
         }
