@@ -125,43 +125,27 @@ public class HashMap implements Map, Iterable {
     }
 
     private class MyIterator implements Iterator {
-        private int arrayListIndex = 0;
         private int hashMapIndex = 0;
         private int bucketNumber = 0;
         private int arrayListIndexToRemove = 0;
         private int bucketNumberToRemove = 0;
         private boolean removable = false;
-
-        private int getBucketNumber(int bucketNumber) {
-            if (bucketNumber == 4) {
-                bucketNumber = bucketNumber;
-            } else if (buckets[bucketNumber] == null) {
-                bucketNumber += 1;
-                getBucketNumber(bucketNumber);
-            }
-            return bucketNumber;
-        }
+        Iterator iterator = buckets[bucketNumber].iterator();
 
         public boolean hasNext() {
             return hashMapIndex < size;
         }
 
         public Object next() {
-            bucketNumber = getBucketNumber(bucketNumber);
-
-            ArrayList bucket = buckets[bucketNumber];
-            Entry element = (Entry) bucket.get(arrayListIndex);
-            arrayListIndexToRemove = arrayListIndex;
-            bucketNumberToRemove = bucketNumber;
-            arrayListIndex++;
+            Entry element;
+                if (iterator.hasNext()) {
+                    element = (Entry) iterator.next();
+                } else {
+                    bucketNumber ++;
+                    iterator = buckets[bucketNumber].iterator();
+                    element = (Entry) iterator.next();
+                }
             hashMapIndex++;
-            removable = true;
-
-            if (arrayListIndex == buckets[bucketNumber].size()) {
-                bucketNumber++;
-                arrayListIndex = 0;
-            }
-
             return element.value;
         }
 
