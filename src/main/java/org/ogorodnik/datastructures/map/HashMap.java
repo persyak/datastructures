@@ -30,10 +30,10 @@ public class HashMap implements Map, Iterable {
         } else {
             bucket = buckets[index];
         }
-        for (int i = 0; i < bucket.size(); i++) {
-            if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
-                oldValue = bucket.get(i).value;
-                bucket.get(i).value = value;
+        for (Entry element : bucket) {
+            if (isFirstKeyEqualSecondKey(element.key, key)) {
+                oldValue = element.value;
+                element.value = value;
                 updated = true;
             }
         }
@@ -47,9 +47,9 @@ public class HashMap implements Map, Iterable {
     public Object get(Object key) {
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
-            for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
-                    return bucket.get(i).value;
+            for (Entry element: bucket) {
+                if (element.key.equals(key)) {
+                    return element.value;
                 }
             }
         }
@@ -59,11 +59,13 @@ public class HashMap implements Map, Iterable {
     public Object remove(Object key) {
         Object oldValue = null;
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
-        if(bucket != null) {
-            for (int i = 0; i < bucket.size(); i++) {
-                if (bucket.get(i).key.equals(key)) {
-                    oldValue = bucket.get(i).value;
-                    bucket.remove(i);
+        if (bucket != null) {
+            Iterator iterator = bucket.iterator();
+            while(iterator.hasNext()){
+                Entry item = (Entry) iterator.next();
+                if(item.key.equals(key)){
+                    oldValue = item.value;
+                    iterator.remove();
                     size--;
                 }
             }
@@ -71,7 +73,7 @@ public class HashMap implements Map, Iterable {
         return oldValue;
     }
 
-    public boolean contains(Object key) {
+    public boolean containsKey(Object key) {
         int index = getHashIndex(key);
         if (isEmpty() || buckets[index] == null) {
             return false;
@@ -88,22 +90,23 @@ public class HashMap implements Map, Iterable {
 
     public Object putIfAbsent(Object key, Object value) {
         Object oldValue = null;
-        if (!contains(key)) {
-            ArrayList<Entry> bucket;
-            int index = getHashIndex(key);
-            if (buckets[index] == null) {
-                bucket = buckets[index] = new ArrayList();
-            } else {
-                bucket = buckets[index];
-            }
-            if (size == 0) {
-                bucket.add(new Entry(key, value));
-            } else if (bucket.isEmpty()) {
-                bucket.add(new Entry(key, value));
-            }
-            size++;
+        boolean isPresent = false;
+        ArrayList<Entry> bucket;
+        int index = getHashIndex(key);
+        if (buckets[index] == null) {
+            bucket = buckets[index] = new ArrayList();
         } else {
-            oldValue = get(key);
+            bucket = buckets[index];
+        }
+        for (int i = 0; i < bucket.size(); i++) {
+            if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
+                oldValue = bucket.get(i).value;
+                isPresent = true;
+            }
+        }
+        if (!isPresent) {
+            bucket.add(new Entry(key, value));
+            size++;
         }
         return oldValue;
     }

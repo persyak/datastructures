@@ -40,15 +40,16 @@ public class HashMapTest {
         assertEquals("value2", hashMap.remove("key2"));
         assertEquals(2, hashMap.size());
         assertNull(hashMap.remove("key2"));
+        assertEquals(null, hashMap.remove("key2"));
         assertNull(hashMap.remove("key4"));
         assertEquals(2, hashMap.size());
     }
 
     @Test
     public void testContains(){
-        assertFalse(hashMap.contains("key1"));
+        assertFalse(hashMap.containsKey("key1"));
         hashMap.put("key1", "value1");
-        assertTrue(hashMap.contains("key1"));
+        assertTrue(hashMap.containsKey("key1"));
     }
 
     @Test
@@ -56,7 +57,7 @@ public class HashMapTest {
         assertNull(hashMap.putIfAbsent("key1", "value1"));
         assertEquals(1, hashMap.size());
         assertNull(hashMap.putIfAbsent("key2", "value2"));
-        assertTrue(hashMap.contains("key1"));
+        assertTrue(hashMap.containsKey("key1"));
         assertEquals(2, hashMap.size());
         assertEquals("value2", hashMap.putIfAbsent("key2", "value3"));
         assertNull(hashMap.putIfAbsent("key3", null));
@@ -98,6 +99,6 @@ public class HashMapTest {
                 iterator.remove();
             }
         }
-        assertFalse(hashMap.contains('A'));
+        assertFalse(hashMap.containsKey('A'));
     }
 }

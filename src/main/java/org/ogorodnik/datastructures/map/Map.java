@@ -11,7 +11,7 @@ public interface Map {
     //Returns value that was removed
     Object remove(Object key);
 
-    boolean contains(Object key);
+    boolean containsKey(Object key);
 
     //Returns value of the key if it exists, and null, if it does not exist
     Object putIfAbsent(Object key, Object value);
