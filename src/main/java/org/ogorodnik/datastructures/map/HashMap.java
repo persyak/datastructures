@@ -139,7 +139,7 @@ public class HashMap <K, V> implements Map <K, V>, Iterable {
             return count < size;
         }
 
-        public Entry next() {
+        public Map.Entry<K,V> next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
