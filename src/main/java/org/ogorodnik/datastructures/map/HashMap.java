@@ -3,6 +3,7 @@ package org.ogorodnik.datastructures.map;
 import org.ogorodnik.datastructures.list.ArrayList;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class HashMap implements Map, Iterable {
@@ -47,8 +48,8 @@ public class HashMap implements Map, Iterable {
     public Object get(Object key) {
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
-            for (Entry element: bucket) {
-                if (element.key.equals(key)) {
+            for (Entry element : bucket) {
+                if (isFirstKeyEqualSecondKey(element.key, key)) {
                     return element.value;
                 }
             }
@@ -61,10 +62,10 @@ public class HashMap implements Map, Iterable {
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
             Iterator iterator = bucket.iterator();
-            while(iterator.hasNext()){
-                Entry item = (Entry) iterator.next();
-                if(item.key.equals(key)){
-                    oldValue = item.value;
+            while (iterator.hasNext()) {
+                Entry element = (Entry) iterator.next();
+                if (isFirstKeyEqualSecondKey(element.key, key)) {
+                    oldValue = element.value;
                     iterator.remove();
                     size--;
                 }
@@ -79,8 +80,10 @@ public class HashMap implements Map, Iterable {
             return false;
         } else {
             ArrayList<Entry> bucket = buckets[index];
-            for (int i = 0; i < bucket.size(); i++) {
-                if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
+            Iterator iterator = bucket.iterator();
+            while (iterator.hasNext()) {
+                Entry element = (Entry) iterator.next();
+                if (isFirstKeyEqualSecondKey(element.key, key)) {
                     return true;
                 }
             }
@@ -98,16 +101,18 @@ public class HashMap implements Map, Iterable {
         } else {
             bucket = buckets[index];
         }
-        for (int i = 0; i < bucket.size(); i++) {
-            if (isFirstKeyEqualSecondKey(bucket.get(i).key, key)) {
-                oldValue = bucket.get(i).value;
-                isPresent = true;
+            Iterator iterator = bucket.iterator();
+            while (iterator.hasNext()) {
+                Entry element = (Entry) iterator.next();
+                if (isFirstKeyEqualSecondKey(element.key, key)) {
+                    oldValue = element.value;
+                    isPresent = true;
+                }
             }
-        }
-        if (!isPresent) {
-            bucket.add(new Entry(key, value));
-            size++;
-        }
+            if (!isPresent) {
+                bucket.add(new Entry(key, value));
+                size++;
+            }
         return oldValue;
     }
 
@@ -121,44 +126,51 @@ public class HashMap implements Map, Iterable {
 
     @Override
     public Iterator iterator() {
-        return new MyIterator();
+        return new HashMapIterator();
     }
 
-    private class MyIterator implements Iterator {
-        private int hashMapIndex = 0;
-        private int bucketNumber = 0;
-        private int arrayListIndexToRemove = 0;
-        private int bucketNumberToRemove = 0;
-        private boolean removable = false;
-        Iterator iterator = buckets[bucketNumber].iterator();
+    private class HashMapIterator implements Iterator {
+        private Iterator<Entry> iterator;
+        private int bucketIndex = -1;
+        private int count;
+        private boolean deleted;
+
 
         public boolean hasNext() {
-            return hashMapIndex < size;
+            return count < size;
         }
 
         public Object next() {
-            Entry element;
-                if (iterator.hasNext()) {
-                    element = (Entry) iterator.next();
-                } else {
-                    bucketNumber ++;
-                    iterator = buckets[bucketNumber].iterator();
-                    element = (Entry) iterator.next();
-                }
-            hashMapIndex++;
-            return element.value;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            deleted = false;
+            if (iterator == null || !iterator.hasNext()) {
+                bucketIndex++;
+                bucketIsNull();
+            }
+            count++;
+            return iterator.next().value;
+        }
+
+        private void bucketIsNull() {
+            while (buckets[bucketIndex] == null) {
+                bucketIndex++;
+            }
+            iterator = buckets[bucketIndex].iterator();
         }
 
         public void remove() {
-            if (!removable) {
+            if (count == 0 || deleted) {
                 throw new IllegalStateException();
             }
-            ArrayList bucket = buckets[bucketNumberToRemove];
-            Entry element = (Entry) bucket.get(arrayListIndexToRemove);
-            Object key = element.key;
-            HashMap.this.remove(key);
-            hashMapIndex--;
-            removable = false;
+            iterator.remove();
+            if (buckets[bucketIndex].size() == 0) {
+                buckets[bucketIndex] = null;
+            }
+            size--;
+            count--;
+            deleted = true;
         }
     }
 

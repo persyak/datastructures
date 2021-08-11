@@ -33,14 +33,14 @@ public class HashMapTest {
 
     @Test
     public void testRemove(){
-        hashMap.put("key1", "value1");
+        hashMap.put(null, "value1");
         hashMap.put("key2", "value2");
         hashMap.put("key3", "value3");
         assertEquals(3, hashMap.size());
-        assertEquals("value2", hashMap.remove("key2"));
+        assertEquals("value1", hashMap.remove(null));
         assertEquals(2, hashMap.size());
-        assertNull(hashMap.remove("key2"));
-        assertEquals(null, hashMap.remove("key2"));
+        assertNull(hashMap.remove(null));
+        assertEquals(null, hashMap.remove(null));
         assertNull(hashMap.remove("key4"));
         assertEquals(2, hashMap.size());
     }
@@ -50,6 +50,14 @@ public class HashMapTest {
         assertFalse(hashMap.containsKey("key1"));
         hashMap.put("key1", "value1");
         assertTrue(hashMap.containsKey("key1"));
+        hashMap.put("key1", 'A');
+        hashMap.put("key2", 'B');
+        hashMap.put(null, 'C');
+        hashMap.put("key4", 'D');
+        hashMap.put("key5", 'E');
+        hashMap.put("key6", 'F');
+        assertTrue(hashMap.containsKey("key5"));
+        assertTrue(hashMap.containsKey(null));
     }
 
     @Test
@@ -60,6 +68,7 @@ public class HashMapTest {
         assertTrue(hashMap.containsKey("key1"));
         assertEquals(2, hashMap.size());
         assertEquals("value2", hashMap.putIfAbsent("key2", "value3"));
+        assertEquals(2, hashMap.size());
         assertNull(hashMap.putIfAbsent("key3", null));
         assertEquals(3, hashMap.size());
         assertNull(hashMap.putIfAbsent("key3", "value3"));
@@ -69,18 +78,10 @@ public class HashMapTest {
 
     @Test
     public void testIterator(){
-//        hashMap.put("key1", 'A');
-//        hashMap.put("key2", 'B');
-//        hashMap.put("key3", 'C');
-//        hashMap.put("key4", 'D');
-//        hashMap.put("key5", 'E');
-//        hashMap.put("key6", 'F');
-
         Random random = new Random();
         for(int i=0; i<101; i++){
             hashMap.put(i, random.nextInt(1000)+1);
         }
-
         for(Object element: hashMap){
             System.out.println(element);
         }
@@ -92,6 +93,7 @@ public class HashMapTest {
         hashMap.put("key2", 'B');
         hashMap.put("key3", 'C');
         hashMap.put("key4", 'D');
+        hashMap.put("key5", 'E');
 
         Iterator iterator = hashMap.iterator();
         while(iterator.hasNext()){
@@ -99,6 +101,6 @@ public class HashMapTest {
                 iterator.remove();
             }
         }
-        assertFalse(hashMap.containsKey('A'));
+        assertFalse(hashMap.containsKey("key1"));
     }
 }
