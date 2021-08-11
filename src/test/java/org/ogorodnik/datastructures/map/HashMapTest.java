@@ -97,7 +97,7 @@ public class HashMapTest {
 
         Iterator iterator = hashMap.iterator();
         while(iterator.hasNext()){
-            if(iterator.next().equals('A')){
+            if(iterator.next().equals(new Map.Entry<>("key1", 'A'))){
                 iterator.remove();
             }
         }

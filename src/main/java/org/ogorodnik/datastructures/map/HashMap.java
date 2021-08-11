@@ -6,22 +6,21 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class HashMap implements Map, Iterable {
+public class HashMap <K, V> implements Map <K, V>, Iterable {
     private static final int INITIAL_CAPACITY = 5;
 
     private ArrayList[] buckets = new ArrayList[INITIAL_CAPACITY];
     int size;
 
-    private int getHashIndex(Object key) {
-        int index = Math.abs(Objects.hashCode(key)) % buckets.length;
-        return index;
+    private int getHashIndex(K key) {
+        return Math.abs(Objects.hashCode(key)) % buckets.length;
     }
 
-    private boolean isFirstKeyEqualSecondKey(Object key1, Object key2) {
+    private boolean isFirstKeyEqualSecondKey(K key1, K key2) {
         return (Objects.equals(key1, key2));
     }
 
-    public Object put(Object key, Object value) {
+    public Object put(K key, V value) {
         Object oldValue = null;
         boolean updated = false;
         ArrayList<Entry> bucket;
@@ -31,7 +30,7 @@ public class HashMap implements Map, Iterable {
         } else {
             bucket = buckets[index];
         }
-        for (Entry element : bucket) {
+        for (Entry element: bucket) {
             if (isFirstKeyEqualSecondKey(element.key, key)) {
                 oldValue = element.value;
                 element.value = value;
@@ -45,7 +44,7 @@ public class HashMap implements Map, Iterable {
         return oldValue;
     }
 
-    public Object get(Object key) {
+    public Object get(K key) {
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
             for (Entry element : bucket) {
@@ -57,7 +56,7 @@ public class HashMap implements Map, Iterable {
         return null;
     }
 
-    public Object remove(Object key) {
+    public Object remove(K key) {
         Object oldValue = null;
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
@@ -74,7 +73,7 @@ public class HashMap implements Map, Iterable {
         return oldValue;
     }
 
-    public boolean containsKey(Object key) {
+    public boolean containsKey(K key) {
         int index = getHashIndex(key);
         if (isEmpty() || buckets[index] == null) {
             return false;
@@ -91,7 +90,7 @@ public class HashMap implements Map, Iterable {
         }
     }
 
-    public Object putIfAbsent(Object key, Object value) {
+    public Object putIfAbsent(K key, V value) {
         Object oldValue = null;
         boolean isPresent = false;
         ArrayList<Entry> bucket;
@@ -101,18 +100,18 @@ public class HashMap implements Map, Iterable {
         } else {
             bucket = buckets[index];
         }
-            Iterator iterator = bucket.iterator();
-            while (iterator.hasNext()) {
-                Entry element = (Entry) iterator.next();
-                if (isFirstKeyEqualSecondKey(element.key, key)) {
-                    oldValue = element.value;
-                    isPresent = true;
-                }
+        Iterator iterator = bucket.iterator();
+        while (iterator.hasNext()) {
+            Entry element = (Entry) iterator.next();
+            if (isFirstKeyEqualSecondKey(element.key, key)) {
+                oldValue = element.value;
+                isPresent = true;
             }
-            if (!isPresent) {
-                bucket.add(new Entry(key, value));
-                size++;
-            }
+        }
+        if (!isPresent) {
+            bucket.add(new Entry(key, value));
+            size++;
+        }
         return oldValue;
     }
 
@@ -125,11 +124,11 @@ public class HashMap implements Map, Iterable {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator <Map.Entry<K, V>> iterator() {
         return new HashMapIterator();
     }
 
-    private class HashMapIterator implements Iterator {
+    private class HashMapIterator implements Iterator<Map.Entry<K, V>> {
         private Iterator<Entry> iterator;
         private int bucketIndex = -1;
         private int count;
@@ -140,7 +139,7 @@ public class HashMap implements Map, Iterable {
             return count < size;
         }
 
-        public Object next() {
+        public Entry next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -150,7 +149,7 @@ public class HashMap implements Map, Iterable {
                 bucketIsNull();
             }
             count++;
-            return iterator.next().value;
+            return iterator.next();
         }
 
         private void bucketIsNull() {
@@ -174,11 +173,11 @@ public class HashMap implements Map, Iterable {
         }
     }
 
-    private static class Entry {
-        private Object key;
-        private Object value;
+    private class Entry extends Map.Entry<K, V> {
+        private K key;
+        private V value;
 
-        private Entry(Object key, Object value) {
+        private Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }

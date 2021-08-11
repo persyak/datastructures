@@ -1,22 +1,35 @@
 package org.ogorodnik.datastructures.map;
 
-public interface Map {
+public interface Map<K, V> {
     //works like update; it adds key and value; but if key exists already,
     // it updates key value and returns legacy key value
-    Object put(Object key, Object value);
+    Object put(K key, V value);
 
     //Returns current value of the key
-    Object get(Object key);
+    Object get(K key);
 
     //Returns value that was removed
-    Object remove(Object key);
+    Object remove(K key);
 
-    boolean containsKey(Object key);
+    boolean containsKey(K key);
 
     //Returns value of the key if it exists, and null, if it does not exist
-    Object putIfAbsent(Object key, Object value);
+    Object putIfAbsent(K key, V value);
 
     int size();
 
     boolean isEmpty();
+
+    public class Entry<K, V> {
+        private K key;
+        private V value;
+
+        public Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public Entry() {
+        }
+    }
 }
