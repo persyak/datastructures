@@ -31,5 +31,13 @@ public interface Map<K, V> {
 
         public Entry() {
         }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
     }
 }

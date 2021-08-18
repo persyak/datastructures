@@ -3,104 +3,562 @@ package org.ogorodnik.datastructures.map;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HashMapTest {
-    private HashMap hashMap = new HashMap();
 
     @Test
-    public void testPut(){
-        assertNull(hashMap.put(null, "value1"));
-        assertEquals(1, hashMap.size());
-        assertNull(hashMap.put("key2", "value2"));
-        assertEquals(2, hashMap.size());
-        assertEquals("value1", hashMap.put(null, "value3"));
-        assertEquals(2, hashMap.size());
+    public void givenEmptyMapWhenGetByNullKeyThenNullShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        assertThat(map.get(null), is(nullValue()));
     }
 
     @Test
-    public void testPutAndGet(){
-        assertNull(hashMap.put("key1", "value1"));
-        assertEquals(1, hashMap.size());
-        assertEquals("value1", hashMap.get("key1"));
-        assertNull(hashMap.get("key2"));
-        assertNull(hashMap.put("key2", null));
-        assertNull(hashMap.get("key2"));
-        assertNull(hashMap.get("key6"));
+    public void givenEmptyMapWhenGetByNotNullKeyThenNullShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        assertThat(map.get("key"), is(nullValue()));
     }
 
     @Test
-    public void testRemove(){
-        hashMap.put(null, "value1");
-        hashMap.put("key2", "value2");
-        hashMap.put("key3", "value3");
-        assertEquals(3, hashMap.size());
-        assertEquals("value1", hashMap.remove(null));
-        assertEquals(2, hashMap.size());
-        assertNull(hashMap.remove(null));
-        assertEquals(null, hashMap.remove(null));
-        assertNull(hashMap.remove("key4"));
-        assertEquals(2, hashMap.size());
+    public void givenNullKeyWhenPutOnceThenSizeShouldBeEqualToOneAndValueShouldBeEqualToInserted() {
+        Map<String, String> map = new HashMap<>();
+
+        String key = null;
+        String value = "test";
+
+        map.put(key, value);
+
+        assertThat(map.size(), is(1));
+        assertThat(map.get(key), is(value));
     }
 
     @Test
-    public void testContains(){
-        assertFalse(hashMap.containsKey("key1"));
-        hashMap.put("key1", "value1");
-        assertTrue(hashMap.containsKey("key1"));
-        hashMap.put("key1", 'A');
-        hashMap.put("key2", 'B');
-        hashMap.put(null, 'C');
-        hashMap.put("key4", 'D');
-        hashMap.put("key5", 'E');
-        hashMap.put("key6", 'F');
-        assertTrue(hashMap.containsKey("key5"));
-        assertTrue(hashMap.containsKey(null));
+    public void givenNullKeyWhenPutMultipleTimesThenSizeShouldBeEqualToOneAndValueShouldBeOverwrittenWithLast() {
+        Map<String, String> map = new HashMap<>();
+
+        String key = null;
+        String firstValue = "test1";
+        String secondValue = "test2";
+        String thirdValue = "test3";
+
+        map.put(key, firstValue);
+        map.put(key, secondValue);
+        map.put(key, thirdValue);
+
+        assertThat(map.size(), is(1));
+        assertThat(map.get(key), is(thirdValue));
     }
 
     @Test
-    public void testPutIfAbsent(){
-        assertNull(hashMap.putIfAbsent("key1", "value1"));
-        assertEquals(1, hashMap.size());
-        assertNull(hashMap.putIfAbsent("key2", "value2"));
-        assertTrue(hashMap.containsKey("key1"));
-        assertEquals(2, hashMap.size());
-        assertEquals("value2", hashMap.putIfAbsent("key2", "value3"));
-        assertEquals(2, hashMap.size());
-        assertNull(hashMap.putIfAbsent("key3", null));
-        assertEquals(3, hashMap.size());
-        assertNull(hashMap.putIfAbsent("key3", "value3"));
-        assertEquals(3, hashMap.size());
-        assertNull(hashMap.get("key3"));
+    public void givenNotNullKeyWhenPutThenSizeShouldBeEqualToOneAndValueShouldBeEqualToInserted() {
+        Map<String, String> map = new HashMap<>();
+
+        String key = "key";
+        String value = "value";
+
+        map.put(key, value);
+
+        assertThat(map.size(), is(1));
+        assertThat(map.get(key), is(value));
     }
 
     @Test
-    public void testIterator(){
-        Random random = new Random();
-        for(int i=0; i<101; i++){
-            hashMap.put(i, random.nextInt(1000)+1);
-        }
-        for(Object element: hashMap){
-            System.out.println(element);
-        }
+    public void givenMultipleNotNullKeysWhenPutThenSizeShouldBeEqualToSizeOfKeysAndGetByKeyReturnsCorrespondingValue() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2";
+        String firstValue = "value1";
+        String secondValue = "value2";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+
+        assertThat(map.size(), is(2));
+        assertThat(map.get(firstKey), is(firstValue));
+        assertThat(map.get(secondKey), is(secondValue));
     }
 
     @Test
-    public void testIteratorRemove(){
-        hashMap.put("key1", 'A');
-        hashMap.put("key2", 'B');
-        hashMap.put("key3", 'C');
-        hashMap.put("key4", 'D');
-        hashMap.put("key5", 'E');
+    public void givenMultipleNodesInSameBucketWhenGetByExistingKeyThenGetByKeyReturnsCorrespondingValue() {
+        Map<String, String> map = new HashMap<>();
 
-        Iterator iterator = hashMap.iterator();
-        while(iterator.hasNext()){
-            if(iterator.next().equals(new Map.Entry<>("key1", 'A'))){
-                iterator.remove();
-            }
-        }
-        assertFalse(hashMap.containsKey("key1"));
+        String firstKey = "key2"; //same bucket
+        String secondKey = "key-1"; //same bucket
+        String thirdKey = "key-10"; //same bucket
+
+        String firstValue = "value2";
+        String secondValue = "value3";
+        String thirdValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+
+        assertThat(map.size(), is(3));
+
+        assertThat(map.get(firstKey), is(firstValue));
+        assertThat(map.get(secondKey), is(secondValue));
+        assertThat(map.get(thirdKey), is(thirdValue));
     }
+
+    @Test
+    public void givenNotExistingKeyWhenGetByKeyThenNullShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        map.put("existing key", "value");
+
+        assertThat(map.get("not existing key"), is(nullValue()));
+    }
+
+    @Test
+    public void givenNotNullKeyWhenPutMultipleTimesWithSameKeyThenSizeShouldBeEqualToOneAndValueShouldBeOverwrittenWithLast() {
+        Map<String, String> map = new HashMap<>();
+
+        String key = "key";
+        String firstValue = "test1";
+        String secondValue = "test2";
+        String thirdValue = "test3";
+
+        map.put(key, firstValue);
+        map.put(key, secondValue);
+        map.put(key, thirdValue);
+
+        assertThat(map.size(), is(1));
+        assertThat(map.get(key), is(thirdValue));
+    }
+
+    @Test
+    public void givenEmptyMapWhenRemoveByNullKeyThenSizeShouldBeEqualToZero() {
+        Map<String, String> map = new HashMap<>();
+        map.remove(null);
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenEmptyMapWhenRemoveByNotNullKeyThenSizeShouldBeEqualToZero() {
+        Map<String, String> map = new HashMap<>();
+        map.remove("key");
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapWhenRemoveByNullKeyThenSizeShouldBeEqualToZero() {
+        Map<String, String> map = new HashMap<>();
+        map.put(null, "value");
+        map.remove(null);
+
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapWithNotNullKeyWhenPutWithNullKeyAndRemoveByNullKeyThenSizeShouldDecreaseByOne() {
+        Map<String, String> map = new HashMap<>();
+        map.put(null, "value");
+        map.put("not null key", "value");
+
+        assertThat(map.size(), is(2));
+
+        map.remove(null);
+        assertThat(map.size(), is(1));
+    }
+
+    @Test
+    public void givenEmptyMapWhenRemoveThenSizeShouldBeEqualToZero() {
+        Map<String, String> map = new HashMap<>();
+        map.remove("key");
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapWhenRemoveThenSizeShouldBeEqualToZero() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("key", "value");
+        assertThat(map.size(), is(1));
+
+        map.remove("key");
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapWhenRemoveOneByOneThenSizeShouldDecreaseAfterEachRemovalByOne() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue); //case: remove first node
+        map.put(thirdKey, thirdValue); //case: remove last node
+
+        assertThat(map.size(), is(3));
+
+        map.remove(firstKey);
+        assertThat(map.size(), is(2));
+
+        map.remove(secondKey);
+        assertThat(map.size(), is(1));
+
+        map.remove(thirdKey);
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapAndObjectsInSameBucketWhenRemoveFirstNodeThenSizeShouldDecreaseByOne() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+        String fourthKey = "key-10"; //same bucket
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+        String fourthValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+        map.put(fourthKey, fourthValue);
+
+        assertThat(map.size(), is(4));
+
+        map.remove(secondKey); //case: remove first node
+        assertThat(map.size(), is(3));
+    }
+
+    @Test
+    public void givenNotEmptyMapAndObjectsInSameBucketWhenRemoveLastNodeThenSizeShouldDecreaseByOne() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+        String fourthKey = "key-10"; //same bucket
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+        String fourthValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+        map.put(fourthKey, fourthValue);
+
+        assertThat(map.size(), is(4));
+
+        map.remove(fourthKey); //case: remove first node
+        assertThat(map.size(), is(3));
+    }
+
+    @Test
+    public void givenNotEmptyMapAndObjectsInSameBucketWhenRemoveNodeInTheMiddleThenSizeShouldDecreaseByOne() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+        String fourthKey = "key-10"; //same bucket
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+        String fourthValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+        map.put(fourthKey, fourthValue);
+
+        assertThat(map.size(), is(4));
+
+        map.remove(thirdKey); //case: remove node in the middle
+        assertThat(map.size(), is(3));
+    }
+
+    @Test
+    public void givenEmptyMapNotAndNotExistingKeyWhenRemoveThenSizeShouldNotChange() {
+        Map<String, String> map = new HashMap<>();
+        map.remove("not existing key");
+        assertThat(map.size(), is(0));
+    }
+
+    @Test
+    public void givenNotEmptyMapNotAndNotExistingKeyWhenRemoveThenSizeShouldNotChange() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+
+        assertThat(map.size(), is(1));
+
+        map.remove("not existing key");
+        assertThat(map.size(), is(1));
+    }
+
+    @Test
+    public void givenEmptyMapWhenContainsNullKeyThenFalseShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        assertThat(map.containsKey(null), is(false));
+    }
+
+    @Test
+    public void givenEmptyMapWhenContainsNotNullKeyThenFalseShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        assertThat(map.containsKey("key"), is(false));
+    }
+
+    @Test
+    public void givenMapWithExistingNullKeyWhenContainsNullKeyThenTrueShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        map.put(null, "value");
+
+        assertThat(map.containsKey(null), is(true));
+    }
+
+    @Test
+    public void givenMapWithNotExistingNullKeyWhenContainsNullKeyThenFalseShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+
+        assertThat(map.containsKey(null), is(false));
+    }
+
+    @Test
+    public void givenNotExistingKeyWhenContainsKeyThenFalseShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+
+        assertThat(map.containsKey("key"), is(true));
+    }
+
+    @Test
+    public void givenExistingKeyWhenContainsKeyThenTrueShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+
+        assertThat(map.containsKey("not existing key"), is(false));
+    }
+
+    @Test
+    public void givenMultipleNodesInSameBucketAndExistingKeyWhenContainsByKeyThenTrueShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+        String fourthKey = "key-10"; //same bucket
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+        String fourthValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+        map.put(fourthKey, fourthValue);
+
+        assertThat(map.containsKey(firstKey), is(true));
+        assertThat(map.containsKey(secondKey), is(true));
+        assertThat(map.containsKey(thirdKey), is(true));
+        assertThat(map.containsKey(fourthKey), is(true));
+    }
+
+    @Test
+    public void givenMultipleNodesInSameBucketAndNotExistingKeyWithHashLeadingToSameBucketWhenContainsByKeyThenFalseShouldBeReturned() {
+        Map<String, String> map = new HashMap<>();
+
+        String firstKey = "key1";
+        String secondKey = "key2"; //same bucket
+        String thirdKey = "key-1"; //same bucket
+        String fourthKey = "key-10"; //same bucket
+        String notExistingKeyWithHashLeadingToSameBucket = "key+12";
+
+        String firstValue = "value1";
+        String secondValue = "value2";
+        String thirdValue = "value3";
+        String fourthValue = "value4";
+
+        map.put(firstKey, firstValue);
+        map.put(secondKey, secondValue);
+        map.put(thirdKey, thirdValue);
+        map.put(fourthKey, fourthValue);
+
+        assertThat(map.containsKey(firstKey), is(true));
+        assertThat(map.containsKey(secondKey), is(true));
+        assertThat(map.containsKey(thirdKey), is(true));
+        assertThat(map.containsKey(fourthKey), is(true));
+        assertThat(map.containsKey(notExistingKeyWithHashLeadingToSameBucket), is(false));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void givenEmptyMapWhenIteratorNextThenNoSuchElementExceptionShouldBeRaised() {
+        new HashMap<>().iterator().next();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void givenIteratorWhenNextAfterLastElementThenNoSuchElementExceptionShouldBeRaised() {
+        HashMap<String, String> map = new HashMap<>();
+
+        String key = "key";
+        String value = "value";
+        map.put(key, value);
+
+        Iterator<Map.Entry> iterator = map.iterator();
+
+        Map.Entry<String, String> entry = iterator.next();
+        assertThat(entry.getKey(), is(key));
+        assertThat(entry.getValue(), is(value));
+
+        iterator.next();
+    }
+
+//    @Test
+//    public void givenIteratorWhenNextThenShouldReturnNextValue() {
+//        HashMap<String, String> map = new HashMap<>();
+//
+//        String keyQ = "0";
+//        String keyW = "key1";
+//        String keyE = "key2";
+//        String keyR = "key-1";
+//        String keyT = "key-10";
+//        String keyY = "key-100";
+//        String keyZ = "1000";
+//
+//        String keyQValue = "keyQValue";
+//        String keyWValue = "keyWValue";
+//        String keyEValue = "keyEValue";
+//        String keyRValue = "keyRValue";
+//        String keyTValue = "keyTValue";
+//        String keyYValue = "keyYValue";
+//        String keyZValue = "keyZValue";
+//
+//        map.put(keyQ, keyQValue);
+//        map.put(keyW, keyWValue);
+//        map.put(keyE, keyEValue);
+//        map.put(keyR, keyRValue);
+//        map.put(keyT, keyTValue);
+//        map.put(keyY, keyYValue);
+//        map.put(keyZ, keyZValue);
+//
+//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//
+//        HashMap.Entry<String, String> resultQ = iterator.next();
+//        HashMap.Entry<String, String> resultW = iterator.next();
+//        HashMap.Entry<String, String> resultE = iterator.next();
+//        HashMap.Entry<String, String> resultR = iterator.next();
+//        HashMap.Entry<String, String> resultT = iterator.next();
+//        HashMap.Entry<String, String> resultY = iterator.next();
+//        HashMap.Entry<String, String> resultZ = iterator.next();
+//
+//        assertThat(resultQ.getKey(), is(keyQ));
+//        assertThat(resultQ.getValue(), is(keyQValue));
+//
+//        assertThat(resultW.getKey(), is(keyW));
+//        assertThat(resultW.getValue(), is(keyWValue));
+//
+//        assertThat(resultE.getKey(), is(keyE));
+//        assertThat(resultE.getValue(), is(keyEValue));
+//
+//        assertThat(resultR.getKey(), is(keyR));
+//        assertThat(resultR.getValue(), is(keyRValue));
+//
+//        assertThat(resultT.getKey(), is(keyT));
+//        assertThat(resultT.getValue(), is(keyTValue));
+//
+//        assertThat(resultY.getKey(), is(keyY));
+//        assertThat(resultY.getValue(), is(keyYValue));
+//
+//        assertThat(resultZ.getKey(), is(keyZ));
+//        assertThat(resultZ.getValue(), is(keyZValue));
+//    }
+
+    @Test
+    public void givenEmptyMapWhenIteratorHasNextThenShouldReturnFalse() {
+        HashMap<String, String> map = new HashMap<>();
+        assertThat(map.iterator().hasNext(), is(false));
+    }
+
+//    @Test
+//    public void givenNotEmptyMapWhenIteratorHasNextThenShouldReturnTrue() {
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("key", "value");
+//
+//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//        assertThat(iterator.hasNext(), is(true));
+//        assertThat(iterator.hasNext(), is(true));
+//
+//        map.remove("key");
+//        assertThat(iterator.hasNext(), is(false));
+//
+//        map.put("key", "value");
+//        assertThat(iterator.hasNext(), is(true));
+//    }
+
+//    @Test
+//    public void givenMapWithTwoElementsWhenIteratorNextThenIteratorHasNextShouldReturnFalse() {
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("key", "value");
+//        map.put("key2", "value");
+//
+//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//
+//        assertThat(iterator.hasNext(), is(true));
+//        iterator.next();
+//        assertThat(iterator.hasNext(), is(true));
+//    }
+//
+//    @Test
+//    public void givenMapWithOneElementWhenIteratorNextThenIteratorHasNextShouldReturnFalse() {
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("key", "value");
+//
+//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//
+//        assertThat(iterator.hasNext(), is(true));
+//        iterator.next();
+//        assertThat(iterator.hasNext(), is(false));
+//    }
+
+    @Test(expected = IllegalStateException.class)
+    public void givenEmptyMapWhenIteratorRemoveThenNoSuchElementExceptionShouldBeRaised() {
+        new HashMap<>().iterator().remove();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void givenIteratorWhenRemoveCalledWithoutNextThenIllegalStateExceptionShouldBeRaised() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("key", "value");
+
+        assertThat(map.size(), is(1));
+
+        map.iterator().remove();
+    }
+
+//    @Test
+//    public void givenIteratorWhenRemoveCalledAfterNextThenSizeShouldBeDecreasedByOneAndMapShouldNotContainKey() {
+//        HashMap<String, String> map = new HashMap<>();
+//        String key = "key";
+//        map.put(key, "value");
+//        assertThat(map.size(), is(1));
+//
+//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//        iterator.next();
+//        iterator.remove();
+//
+//        assertThat(map.size(), is(0));
+//        assertThat(map.containsKey(key), is(false));
+//    }
 }
