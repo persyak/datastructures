@@ -1,5 +1,7 @@
 package org.ogorodnik.datastructures.list;
 
+import java.util.StringJoiner;
+
 public class ArrayList <T> extends AbstractList <T> {
 
     private final static int INITIAL_CAPACITY = 5;
@@ -106,13 +108,10 @@ public class ArrayList <T> extends AbstractList <T> {
 
     //    @Override
     public String toString() {
-        String result = "[";
-        for (int i = 0; i < size - 1; i++) {
-            result += array[i];
-            result += ",";
+        StringJoiner stringJoiner = new StringJoiner(",", "[", "]");
+        for (int i = 0; i < size; i++) {
+            stringJoiner.add(String.valueOf(array[i]));
         }
-        result += array[size - 1];
-        result += "]";
-        return result;
+        return stringJoiner.toString();
     }
 }

@@ -412,16 +412,13 @@ public class HashMapTest {
     public void givenIteratorWhenNextAfterLastElementThenNoSuchElementExceptionShouldBeRaised() {
         HashMap<String, String> map = new HashMap<>();
 
-        String key = "key";
-        String value = "value";
-        map.put(key, value);
+        map.put("key", "value");
 
-        Iterator<Map.Entry> iterator = map.iterator();
+        Iterator<Map.Entry<String, String>> iterator = map.iterator();
 
         Map.Entry<String, String> entry = iterator.next();
-        assertThat(entry.getKey(), is(key));
-        assertThat(entry.getValue(), is(value));
-
+        assertThat(entry.getKey(), is("key"));
+        assertThat(entry.getValue(), is("value"));
         iterator.next();
     }
 
@@ -453,15 +450,15 @@ public class HashMapTest {
 //        map.put(keyY, keyYValue);
 //        map.put(keyZ, keyZValue);
 //
-//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+//        Iterator<Map.Entry<String, String>> iterator = map.iterator();
 //
-//        HashMap.Entry<String, String> resultQ = iterator.next();
-//        HashMap.Entry<String, String> resultW = iterator.next();
-//        HashMap.Entry<String, String> resultE = iterator.next();
-//        HashMap.Entry<String, String> resultR = iterator.next();
-//        HashMap.Entry<String, String> resultT = iterator.next();
-//        HashMap.Entry<String, String> resultY = iterator.next();
-//        HashMap.Entry<String, String> resultZ = iterator.next();
+//        Map.Entry<String, String> resultQ = iterator.next();
+//        Map.Entry<String, String> resultW = iterator.next();
+//        Map.Entry<String, String> resultE = iterator.next();
+//        Map.Entry<String, String> resultR = iterator.next();
+//        Map.Entry<String, String> resultT = iterator.next();
+//        Map.Entry<String, String> resultY = iterator.next();
+//        Map.Entry<String, String> resultZ = iterator.next();
 //
 //        assertThat(resultQ.getKey(), is(keyQ));
 //        assertThat(resultQ.getValue(), is(keyQValue));

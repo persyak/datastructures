@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry> {
+public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     private static final int INITIAL_CAPACITY = 5;
 
     private ArrayList[] buckets = new ArrayList[INITIAL_CAPACITY];
@@ -124,11 +124,11 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry> {
     }
 
     @Override
-    public Iterator<Map.Entry> iterator() {
+    public Iterator<Map.Entry<K, V>> iterator() {
         return new HashMapIterator();
     }
 
-    private class HashMapIterator implements Iterator<Map.Entry> {
+    private class HashMapIterator implements Iterator<Map.Entry<K, V>> {
         private Iterator<Entry> iterator;
         private int bucketIndex = -1;
         private int count;
@@ -173,21 +173,21 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry> {
         }
     }
 
-    private class Entry extends Map.Entry<K, V> {
-        private K key;
+    class Entry extends Map.Entry<K, V> {
+        public K key;
         private V value;
 
-        private Entry(K key, V value) {
+        public Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
-//
-//        public K getKey() {
-//            return key;
-//        }
-//
-//        public V getValue() {
-//            return value;
-//        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
     }
 }
