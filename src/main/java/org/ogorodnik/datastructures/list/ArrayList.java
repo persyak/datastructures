@@ -1,5 +1,6 @@
 package org.ogorodnik.datastructures.list;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 
 public class ArrayList <T> extends AbstractList <T> {
@@ -113,5 +114,9 @@ public class ArrayList <T> extends AbstractList <T> {
             stringJoiner.add(String.valueOf(array[i]));
         }
         return stringJoiner.toString();
+    }
+
+    public void trimToSize(){
+        array = Arrays.copyOf(array, size);
     }
 }

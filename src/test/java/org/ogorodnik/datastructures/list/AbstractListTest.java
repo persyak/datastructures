@@ -6,28 +6,28 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public abstract class AbstractListTest {
+public abstract class AbstractListTest<T> {
 
-    private AbstractList listWithZeroElements;
-    private AbstractList listWithOneElement;
-    private AbstractList listWithFiveElements;
+    private AbstractList<String> listWithZeroElements;
+    private AbstractList<String> listWithOneElement;
+    private AbstractList<String> listWithFiveElements;
 
     @Before
     public void before() {
         listWithZeroElements = getList();
 
         listWithOneElement = getList();
-        listWithOneElement.add('A');
+        listWithOneElement.add("A");
 
         listWithFiveElements = getList();
-        char value = 'A';
-        for (int i = 0; i < 5; i++) {
-            listWithFiveElements.add(value);
-            value++;
-        }
+        listWithFiveElements.add("A");
+        listWithFiveElements.add("B");
+        listWithFiveElements.add("C");
+        listWithFiveElements.add("D");
+        listWithFiveElements.add("E");
     }
 
-    abstract AbstractList getList();
+    abstract AbstractList<String> getList();
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testAddValueGreaterThenSize() {
@@ -36,40 +36,40 @@ public abstract class AbstractListTest {
 
     @Test
     public void testAddByIndex() {
-        char value = 'H';
+        String value = "H";
         listWithFiveElements.add(value, 2);
-        assertEquals('H', listWithFiveElements.get(2));
-        assertEquals('C', listWithFiveElements.get(3));
-        assertEquals('D', listWithFiveElements.get(4));
+        assertEquals("H", listWithFiveElements.get(2));
+        assertEquals("C", listWithFiveElements.get(3));
+        assertEquals("D", listWithFiveElements.get(4));
     }
 
     @Test
     public void testRemove() {
         Object removed = listWithFiveElements.remove(1);
         assertEquals(4, listWithFiveElements.size());
-        assertEquals('B', removed);
-        assertEquals('A', listWithFiveElements.get(0));
-        assertEquals('C', listWithFiveElements.get(1));
-        assertEquals('D', listWithFiveElements.get(2));
-        assertEquals('E', listWithFiveElements.get(3));
+        assertEquals("B", removed);
+        assertEquals("A", listWithFiveElements.get(0));
+        assertEquals("C", listWithFiveElements.get(1));
+        assertEquals("D", listWithFiveElements.get(2));
+        assertEquals("E", listWithFiveElements.get(3));
     }
 
     @Test
     public void testGet() {
-        char value = 'A';
-        for (int i = 0; i < 5; i++) {
-            assertEquals(value, listWithFiveElements.get(i));
-            value++;
-        }
+        assertEquals("A", listWithFiveElements.get(0));
+        assertEquals("B", listWithFiveElements.get(1));
+        assertEquals("C", listWithFiveElements.get(2));
+        assertEquals("D", listWithFiveElements.get(3));
+        assertEquals("E", listWithFiveElements.get(4));
     }
 
     @Test
     public void testSet() {
-        Object setter = listWithFiveElements.set('K', 2);
+        Object setter = listWithFiveElements.set("K", 2);
         assertEquals(5, listWithFiveElements.size());
-        assertEquals('C', setter);
-        assertEquals('K', listWithFiveElements.get(2));
-        assertEquals('D', listWithFiveElements.get(3));
+        assertEquals("C", setter);
+        assertEquals("K", listWithFiveElements.get(2));
+        assertEquals("D", listWithFiveElements.get(3));
     }
 
     @Test
@@ -91,19 +91,19 @@ public abstract class AbstractListTest {
 
     @Test
     public void testContains() {
-        assertTrue(listWithFiveElements.contains('B'));
+        assertTrue(listWithFiveElements.contains("B"));
     }
 
     @Test
     public void testIndexOf() {
-        assertEquals(2, listWithFiveElements.indexOf('C'));
+        assertEquals(2, listWithFiveElements.indexOf("C"));
         listWithFiveElements.set(null, 1);
         assertEquals(1, listWithFiveElements.indexOf(null));
     }
 
     @Test
     public void testLastIndexOf() {
-        assertEquals(2, listWithFiveElements.lastIndexOf('C'));
+        assertEquals(2, listWithFiveElements.lastIndexOf("C"));
         listWithFiveElements.set(null, 1);
         assertEquals(1, listWithFiveElements.lastIndexOf(null));
     }
@@ -121,8 +121,9 @@ public abstract class AbstractListTest {
     @Test
     public void testIterator() {
         char value = 'A';
-        for (Object element : listWithFiveElements) {
-            assertEquals(value, element);
+        for (String element : listWithFiveElements) {
+            String string = Character.toString(value);
+            assertEquals(string, element);
             value++;
         }
     }

@@ -35,8 +35,7 @@ public class LinkedList<T> extends AbstractList<T> {
         T removed;
         if (head == tail) {
             removed = head.value;
-            head = null;
-            tail = null;
+            head = tail = null;
         } else if (index == 0) {
             removed = head.value;
             head = head.next;
