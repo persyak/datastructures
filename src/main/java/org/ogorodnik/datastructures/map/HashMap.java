@@ -1,5 +1,6 @@
 package org.ogorodnik.datastructures.map;
 
+import org.ogorodnik.datastructures.list.AbstractList;
 import org.ogorodnik.datastructures.list.ArrayList;
 
 import java.util.Iterator;
@@ -9,7 +10,7 @@ import java.util.Objects;
 public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     private static final int INITIAL_CAPACITY = 5;
 
-    private ArrayList[] buckets = new ArrayList[INITIAL_CAPACITY];
+    private ArrayList<Entry> [] buckets = new ArrayList[INITIAL_CAPACITY];
     int size;
 
     private int getHashIndex(K key) {
@@ -26,7 +27,7 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
         ArrayList<Entry> bucket;
         int index = getHashIndex(key);
         if (buckets[index] == null) {
-            bucket = buckets[index] = new ArrayList();
+            bucket = buckets[index] = new ArrayList<>();
         } else {
             bucket = buckets[index];
         }
@@ -60,9 +61,9 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
         Object oldValue = null;
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
-            Iterator iterator = bucket.iterator();
+            Iterator<Entry> iterator = bucket.iterator();
             while (iterator.hasNext()) {
-                Entry element = (Entry) iterator.next();
+                Entry element = iterator.next();
                 if (isFirstKeyEqualSecondKey(element.key, key)) {
                     oldValue = element.value;
                     iterator.remove();
@@ -79,9 +80,9 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
             return false;
         } else {
             ArrayList<Entry> bucket = buckets[index];
-            Iterator iterator = bucket.iterator();
+            Iterator<Entry> iterator = bucket.iterator();
             while (iterator.hasNext()) {
-                Entry element = (Entry) iterator.next();
+                Entry element = iterator.next();
                 if (isFirstKeyEqualSecondKey(element.key, key)) {
                     return true;
                 }
@@ -96,13 +97,13 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
         ArrayList<Entry> bucket;
         int index = getHashIndex(key);
         if (buckets[index] == null) {
-            bucket = buckets[index] = new ArrayList();
+            bucket = buckets[index] = new ArrayList<>();
         } else {
             bucket = buckets[index];
         }
-        Iterator iterator = bucket.iterator();
+        Iterator<Entry> iterator = bucket.iterator();
         while (iterator.hasNext()) {
-            Entry element = (Entry) iterator.next();
+            Entry element = iterator.next();
             if (isFirstKeyEqualSecondKey(element.key, key)) {
                 oldValue = element.value;
                 isPresent = true;
@@ -175,7 +176,7 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
 
     class Entry extends Map.Entry<K, V> {
         public K key;
-        private V value;
+        public V value;
 
         public Entry(K key, V value) {
             this.key = key;

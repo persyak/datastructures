@@ -9,7 +9,7 @@ public abstract class AbstractList <T> implements List<T>, Iterable<T> {
         return new MyIterator();
     }
 
-    class MyIterator implements Iterator <T> {
+    private class MyIterator implements Iterator <T> {
         private int index = 0;
         private boolean removable = false;
 
