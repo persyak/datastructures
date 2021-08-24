@@ -1,5 +1,7 @@
 package org.ogorodnik.datastructures.list;
 
+import java.util.StringJoiner;
+
 public class LinkedList<T> extends AbstractList<T> {
 
     private Node<T> head;
@@ -7,7 +9,7 @@ public class LinkedList<T> extends AbstractList<T> {
 
     public void add(T value, int index) {
         validateIndexForAdd(index);
-        Node <T> newNode = new Node <>(value);
+        Node<T> newNode = new Node<>(value);
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
@@ -20,8 +22,8 @@ public class LinkedList<T> extends AbstractList<T> {
             newNode.prev = tail;
             tail = newNode;
         } else {
-            Node <T> current = getNode(index);
-            Node <T> temp = current.prev;
+            Node<T> current = getNode(index);
+            Node<T> temp = current.prev;
             newNode.prev = temp;
             newNode.next = current;
             current.prev = newNode;
@@ -45,10 +47,10 @@ public class LinkedList<T> extends AbstractList<T> {
             tail = tail.prev;
             tail.next = null;
         } else {
-            Node <T> current = getNode(index);
+            Node<T> current = getNode(index);
             removed = current.value;
-            Node <T> prev = current.prev;
-            Node <T> next = current.next;
+            Node<T> prev = current.prev;
+            Node<T> next = current.next;
             prev.next = next;
             next.prev = prev;
         }
@@ -56,8 +58,8 @@ public class LinkedList<T> extends AbstractList<T> {
         return removed;
     }
 
-    private Node <T> getNode(int index) {
-        Node <T> current = head.next;
+    private Node<T> getNode(int index) {
+        Node<T> current = head.next;
         int pointer = 1;
         while (pointer < index) {
             current = current.next;
@@ -69,13 +71,13 @@ public class LinkedList<T> extends AbstractList<T> {
     public T get(int index) {
         validateIndex(index);
         if (index < size / 2) {
-            Node <T> current = head;
+            Node<T> current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
             return current.value;
         } else {
-            Node <T> current = tail;
+            Node<T> current = tail;
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
             }
@@ -85,7 +87,7 @@ public class LinkedList<T> extends AbstractList<T> {
 
     public T set(T value, int index) {
         validateIndex(index);
-        Node <T> current = head;
+        Node<T> current = head;
         int pointer = 0;
         while (pointer < index) {
             current = current.next;
@@ -114,7 +116,7 @@ public class LinkedList<T> extends AbstractList<T> {
     }
 
     public int indexOf(T value) {
-        Node <T> current = head;
+        Node<T> current = head;
         if (value == null) {
             for (int index = 0; index < size; index++) {
                 if (current.value == null) {
@@ -135,7 +137,7 @@ public class LinkedList<T> extends AbstractList<T> {
     }
 
     public int lastIndexOf(T value) {
-        Node <T> current = tail;
+        Node<T> current = tail;
         if (value == null) {
             for (int index = size - 1; index >= 0; index--) {
                 if (current.value == null) {
@@ -156,22 +158,17 @@ public class LinkedList<T> extends AbstractList<T> {
     }
 
     public String toString() {
-        Node <T> current = head;
-        String result = "[";
-        while (current != tail) {
-            result += current.value;
-            result += ",";
-            current = current.next;
+        StringJoiner stringJoiner = new StringJoiner(",", "[", "]");
+        for (T element : this) {
+            stringJoiner.add(String.valueOf(element));
         }
-        result += current.value;
-        result += "]";
-        return result;
+        return stringJoiner.toString();
     }
 
     private static class Node<E> {
         E value;
-        Node <E> next;
-        Node <E> prev;
+        Node<E> next;
+        Node<E> prev;
 
 
         private Node(E value) {
