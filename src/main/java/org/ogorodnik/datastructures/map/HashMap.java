@@ -1,6 +1,5 @@
 package org.ogorodnik.datastructures.map;
 
-import org.ogorodnik.datastructures.list.AbstractList;
 import org.ogorodnik.datastructures.list.ArrayList;
 
 import java.util.Iterator;
