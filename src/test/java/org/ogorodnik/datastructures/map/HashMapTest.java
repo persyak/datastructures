@@ -422,112 +422,11 @@ public class HashMapTest {
         iterator.next();
     }
 
-//    @Test
-//    public void givenIteratorWhenNextThenShouldReturnNextValue() {
-//        HashMap<String, String> map = new HashMap<>();
-//
-//        String keyQ = "0";
-//        String keyW = "key1";
-//        String keyE = "key2";
-//        String keyR = "key-1";
-//        String keyT = "key-10";
-//        String keyY = "key-100";
-//        String keyZ = "1000";
-//
-//        String keyQValue = "keyQValue";
-//        String keyWValue = "keyWValue";
-//        String keyEValue = "keyEValue";
-//        String keyRValue = "keyRValue";
-//        String keyTValue = "keyTValue";
-//        String keyYValue = "keyYValue";
-//        String keyZValue = "keyZValue";
-//
-//        map.put(keyQ, keyQValue);
-//        map.put(keyW, keyWValue);
-//        map.put(keyE, keyEValue);
-//        map.put(keyR, keyRValue);
-//        map.put(keyT, keyTValue);
-//        map.put(keyY, keyYValue);
-//        map.put(keyZ, keyZValue);
-//
-//        Iterator<Map.Entry<String, String>> iterator = map.iterator();
-//
-//        Map.Entry<String, String> resultQ = iterator.next();
-//        Map.Entry<String, String> resultW = iterator.next();
-//        Map.Entry<String, String> resultE = iterator.next();
-//        Map.Entry<String, String> resultR = iterator.next();
-//        Map.Entry<String, String> resultT = iterator.next();
-//        Map.Entry<String, String> resultY = iterator.next();
-//        Map.Entry<String, String> resultZ = iterator.next();
-//
-//        assertThat(resultQ.getKey(), is(keyQ));
-//        assertThat(resultQ.getValue(), is(keyQValue));
-//
-//        assertThat(resultW.getKey(), is(keyW));
-//        assertThat(resultW.getValue(), is(keyWValue));
-//
-//        assertThat(resultE.getKey(), is(keyE));
-//        assertThat(resultE.getValue(), is(keyEValue));
-//
-//        assertThat(resultR.getKey(), is(keyR));
-//        assertThat(resultR.getValue(), is(keyRValue));
-//
-//        assertThat(resultT.getKey(), is(keyT));
-//        assertThat(resultT.getValue(), is(keyTValue));
-//
-//        assertThat(resultY.getKey(), is(keyY));
-//        assertThat(resultY.getValue(), is(keyYValue));
-//
-//        assertThat(resultZ.getKey(), is(keyZ));
-//        assertThat(resultZ.getValue(), is(keyZValue));
-//    }
-
     @Test
     public void givenEmptyMapWhenIteratorHasNextThenShouldReturnFalse() {
         HashMap<String, String> map = new HashMap<>();
         assertThat(map.iterator().hasNext(), is(false));
     }
-
-//    @Test
-//    public void givenNotEmptyMapWhenIteratorHasNextThenShouldReturnTrue() {
-//        HashMap<String, String> map = new HashMap<>();
-//        map.put("key", "value");
-//
-//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
-//        assertThat(iterator.hasNext(), is(true));
-//        assertThat(iterator.hasNext(), is(true));
-//
-//        map.remove("key");
-//        assertThat(iterator.hasNext(), is(false));
-//
-//        map.put("key", "value");
-//        assertThat(iterator.hasNext(), is(true));
-//    }
-
-//    @Test
-//    public void givenMapWithTwoElementsWhenIteratorNextThenIteratorHasNextShouldReturnFalse() {
-//        HashMap<String, String> map = new HashMap<>();
-//        map.put("key", "value");
-//        map.put("key2", "value");
-//
-//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
-//
-//        assertThat(iterator.hasNext(), is(true));
-//        iterator.next();
-//        assertThat(iterator.hasNext(), is(true));
-//    }
-//
-//    @Test
-//    public void givenMapWithOneElementWhenIteratorNextThenIteratorHasNextShouldReturnFalse() {
-//        HashMap<String, String> map = new HashMap<>();
-//        map.put("key", "value");
-//
-//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
-//
-//        assertThat(iterator.hasNext(), is(true));
-//        iterator.next();
-//        assertThat(iterator.hasNext(), is(false));
-//    }
 
     @Test(expected = IllegalStateException.class)
     public void givenEmptyMapWhenIteratorRemoveThenNoSuchElementExceptionShouldBeRaised() {
@@ -544,18 +443,20 @@ public class HashMapTest {
         map.iterator().remove();
     }
 
-//    @Test
-//    public void givenIteratorWhenRemoveCalledAfterNextThenSizeShouldBeDecreasedByOneAndMapShouldNotContainKey() {
-//        HashMap<String, String> map = new HashMap<>();
-//        String key = "key";
-//        map.put(key, "value");
-//        assertThat(map.size(), is(1));
-//
-//        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
-//        iterator.next();
-//        iterator.remove();
-//
-//        assertThat(map.size(), is(0));
-//        assertThat(map.containsKey(key), is(false));
-//    }
+    @Test
+    public void testHashMapGrowsWhenLoadFactorMultipliedByLengthReachedSize(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+        map.put("key3", "value3");
+        map.put("key4", "value4");
+        map.put("key5", "value5");
+        assertThat(map.getBuckets().length, is(10));
+        map.put("key6", "value6");
+        map.put("key7", "value7");
+        map.put("key8", "value8");
+        map.put("key9", "value9");
+        assertThat(map.getBuckets().length, is(20));
+        map.put("key10", "value10");
+    }
 }

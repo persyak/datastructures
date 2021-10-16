@@ -8,12 +8,25 @@ import java.util.Objects;
 
 public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     private static final int INITIAL_CAPACITY = 5;
+    private static final double DEFAULT_LOAD_FACTOR = 0.75;
+    private static final int DEFAULT_GROW_FACTOR = 2;
 
     private ArrayList<Entry> [] buckets = new ArrayList[INITIAL_CAPACITY];
     int size;
 
+    ArrayList<Entry>[] getBuckets(){
+        return buckets;
+    }
+
     private int getHashIndex(K key) {
         return Math.abs(Objects.hashCode(key)) % buckets.length;
+    }
+
+    private ArrayList<Entry>[] grows(ArrayList<Entry>[] arrayList){
+        ArrayList<Entry>[] extendedArrayList = new ArrayList[(DEFAULT_GROW_FACTOR*arrayList.length)];
+        System.arraycopy(arrayList, 0, extendedArrayList, 0, arrayList.length);
+        arrayList = extendedArrayList;
+        return arrayList;
     }
 
     private boolean isFirstKeyEqualSecondKey(K key1, K key2) {
@@ -21,6 +34,9 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     }
 
     public Object put(K key, V value) {
+        if((buckets.length * DEFAULT_LOAD_FACTOR) <= size){
+            buckets = grows(buckets);
+        }
         Object oldValue = null;
         boolean updated = false;
         ArrayList<Entry> bucket;
