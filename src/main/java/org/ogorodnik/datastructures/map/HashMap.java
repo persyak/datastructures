@@ -7,12 +7,40 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
-    private static final int INITIAL_CAPACITY = 5;
+    private static final int DEFAULT_INITIAL_CAPACITY = 5;
     private static final double DEFAULT_LOAD_FACTOR = 0.75;
     private static final int DEFAULT_GROW_FACTOR = 2;
 
-    private ArrayList<Entry> [] buckets = new ArrayList[INITIAL_CAPACITY];
+    private ArrayList<Entry> [] buckets;
     int size;
+    private double loadFactor;
+    private int growFactor;
+
+    public HashMap(){
+        this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR, DEFAULT_GROW_FACTOR);
+    }
+
+    public HashMap(int initialCapacity){
+        this(DEFAULT_LOAD_FACTOR, DEFAULT_GROW_FACTOR);
+        this.buckets = new ArrayList[initialCapacity];
+    }
+
+    public HashMap(double loadFactor, int growFactor){
+        this.loadFactor = loadFactor;
+        this.growFactor = growFactor;
+    }
+
+    public HashMap(int initialCapacity, double loadFactor, int growFactor){
+        this.buckets = new ArrayList[initialCapacity];
+        if(loadFactor <= 0){
+            throw new IllegalArgumentException("loadFactor can't be 0 or less than 0");
+        }
+        if(growFactor <= 0){
+            throw new IllegalArgumentException("growFactor can't be 0 or less than 0");
+        }
+        this.loadFactor = loadFactor;
+        this.growFactor = growFactor;
+    }
 
     ArrayList<Entry>[] getBuckets(){
         return buckets;
