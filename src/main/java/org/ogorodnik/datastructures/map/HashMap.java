@@ -47,6 +47,10 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     }
 
     private int getHashIndex(K key) {
+        int hashCode = Objects.hashCode(key);
+        if(hashCode == -2147483648){
+            hashCode=-2147483647;
+        }
         return Math.abs(Objects.hashCode(key)) % buckets.length;
     }
 
