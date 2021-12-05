@@ -221,7 +221,7 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
         }
     }
 
-    class Entry extends Map.Entry<K, V> {
+    public class Entry extends Map.Entry<K, V> {
         public K key;
         public V value;
 
