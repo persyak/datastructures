@@ -105,7 +105,6 @@ public class HashMap <K, V> implements Map <K, V>, Iterable<Map.Entry<K, V>> {
     }
 
     public Object remove(K key) {
-
         Object oldValue = null;
         ArrayList<Entry> bucket = buckets[getHashIndex(key)];
         if (bucket != null) {
